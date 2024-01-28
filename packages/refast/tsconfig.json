@@ -1,0 +1,9 @@
+{
+  "extends": "@refastdev/config-typescript/base.json",
+  "exclude": ["node_modules/**/*"],
+  "include": ["src/**/*", "test/**/*", "package.json"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["vite/client", "vitest/globals"]
+  }
+}

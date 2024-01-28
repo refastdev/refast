@@ -1,0 +1,18 @@
+{
+  "name": "@refastdev/eslint-config",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-jest": "^27.6.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "vite": "^5.0.11",
+    "vite-plugin-dts": "^3.7.2",
+    "vitest": "^1.2.1"
+  }
+}

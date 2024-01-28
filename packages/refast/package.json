@@ -1,0 +1,54 @@
+{
+  "name": "@refastdev/refast",
+  "version": "0.0.1",
+  "description": "refast",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "type": "module",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/refastdev/refast#readme",
+  "bugs": "https://github.com/refastdev/refast/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/refastdev/refast"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "authors": [
+    "luoluoqixi <luoqixi@luoqixi.com> (https://github.com/luoluoqixi)"
+  ],
+  "keywords": [
+    "refast",
+    "react",
+    "fast",
+    "fastjs",
+    "vite",
+    "router",
+    "routes",
+    "nextjs"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@refastdev/eslint-config": "workspace:*",
+    "@refastdev/config-vite": "workspace:*",
+    "@refastdev/config-typescript": "workspace:*",
+    "@types/react": "^18.2.48",
+    "vite": "^5.0.12",
+    "vitest": "^1.2.1",
+    "react": ">=18"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "vite": ">=4"
+  },
+  "scripts": {
+    "dev": "vitest run index.test.ts",
+    "build": "pnpm run lint && vite build",
+    "lint": "npx eslint src test",
+    "test": "vitest run index.test.ts"
+  }
+}

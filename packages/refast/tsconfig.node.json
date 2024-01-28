@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "extends": "@refastdev/config-typescript/node.json",
+  "include": ["vite.config.ts"]
+}
