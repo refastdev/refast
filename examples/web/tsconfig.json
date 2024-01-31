@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "rootDir": ".",
+    "jsx": "react-jsx",
+  },
+  "extends": ["./node_modules/@refastdev/refast-dev/base-tsconfig.json"],
+  "exclude": ["node_modules"],
+  "include": ["vite.config.ts", "test/**/*", "src/**/*"]
+}

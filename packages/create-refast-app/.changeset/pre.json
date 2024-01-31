@@ -1,0 +1,13 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@refastdev/create-refast-app": "0.0.0"
+  },
+  "changesets": [
+    "breezy-countries-destroy",
+    "funny-beans-call",
+    "khaki-doors-call",
+    "polite-readers-pull"
+  ]
+}
