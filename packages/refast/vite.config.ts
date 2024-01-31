@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 /// <reference types="vite" />
-import pkg from './package.json'
+import { getLib } from '@refastdev/config-vite'
 import path from 'path'
 import { defineConfig } from 'vite'
 
-import { getLib } from '@refastdev/config-vite'
+import pkg from './package.json'
 
 const libConfig = getLib({
   entry: path.resolve(__dirname, 'src/index.ts'),

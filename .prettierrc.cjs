@@ -4,21 +4,7 @@ module.exports = {
   bracketSameLine: false, // </>放在最后一行的末尾
   bracketSpacing: true, // 大括号间使用空格
   htmlWhitespaceSensitivity: 'ignore',
-  importOrder: [
-    '<THIRD_PARTY_MODULES>',
-    '@refastdev/',
-    'interface',
-    '(?=content|api)',
-    'context/',
-    'mock/',
-    'config',
-    'utils/',
-    'hooks/',
-    '(components/|./index)',
-    '.svg',
-    '^../(.*)$',
-    '(?=./styles.module.scss)'
-  ],
+  importOrder: ['^[./]'],
   importOrderSeparation: true, // 用于启用或禁用排序的导入声明组之间的新行分隔
   importOrderSortSpecifiers: true, // 用于启用或禁用导入声明中说明符的排序
   importOrderGroupNamespaceSpecifiers: false, // 用于启用或禁用将命名空间说明符排序到导入组的顶部
