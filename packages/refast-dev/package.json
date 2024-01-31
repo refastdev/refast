@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/refast-dev",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "description": "refast dev toolkit",
   "main": "dist/index.js",
   "types": "./dist/src/index.d.ts",
@@ -34,10 +34,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/refastdev/refast-dev"
+    "url": "https://github.com/refastdev/refast"
   },
-  "homepage": "https://github.com/refastdev/refast-dev#readme",
-  "bugs": "https://github.com/refastdev/refast-dev/issues",
+  "homepage": "https://github.com/refastdev/refast#readme",
+  "bugs": "https://github.com/refastdev/refast/issues",
   "authors": [
     "luoluoqixi <luoqixi@luoqixi.com> (https://github.com/luoluoqixi)"
   ],
@@ -61,7 +61,6 @@
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "jest": "^29.7.0",
-    "husky": "^9.0.5",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-dts": "^3.7.2",
@@ -88,7 +87,6 @@
     "test": "vitest run index.test.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky",
     "prepublishOnly": "pnpm run build",
     "release": "npm publish"
   },

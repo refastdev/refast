@@ -2,4 +2,4 @@
 "@refastdev/refast-dev": patch
 ---
 
-initialize package
+move package to monorepo

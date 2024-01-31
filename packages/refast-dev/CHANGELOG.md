@@ -1,5 +1,12 @@
 # @refastdev/refast-dev
 
+## 0.0.1-alpha.6
+
+### Patch Changes
+
+- move package to monorepo
+- move to monorepo
+
 ## 0.0.1-alpha.5
 
 ### Patch Changes
