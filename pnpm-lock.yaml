@@ -53,6 +53,9 @@ importers:
 
   examples/web:
     dependencies:
+      '@refastdev/refast':
+        specifier: workspace:*
+        version: link:../../packages/refast
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -61,7 +64,7 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@refastdev/refast-dev':
-        specifier: 0.0.1-alpha.5
+        specifier: workspace:*
         version: link:../../packages/refast-dev
       '@types/jest':
         specifier: ^29.5.11
