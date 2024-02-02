@@ -4,6 +4,7 @@
   "include": ["src/**/*", "test/**/*", "package.json"],
   "compilerOptions": {
     "rootDir": ".",
+    "jsx": "react-jsx",
     "types": ["vite/client", "vitest/globals"]
   }
 }
