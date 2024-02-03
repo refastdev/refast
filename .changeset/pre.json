@@ -10,5 +10,7 @@
     "@refastdev/refast": "0.0.2",
     "@refastdev/refast-dev": "0.0.2"
   },
-  "changesets": []
+  "changesets": [
+    "tasty-readers-camp"
+  ]
 }
