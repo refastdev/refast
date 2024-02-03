@@ -1,3 +1,3 @@
 export * from './components'
 export * from './hooks'
-export type { RoutesOption } from './router'
+export type * from './router'

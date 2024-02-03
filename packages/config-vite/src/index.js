@@ -53,7 +53,7 @@ const getLib = ({ libName, entry, exceptDeps }) => ({
     ...base.build,
     lib: {
       entry,
-      formats: ['es', 'umd', 'cjs'],
+      formats: ['es'],
       name: libName,
       fileName: 'index'
     }

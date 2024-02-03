@@ -25,44 +25,63 @@ type Module = {
 
 type ModuleRouter = () => Promise<Partial<Module>>
 
-export interface RoutesOption {
-  pagePath?: string
-  pageAppName?: string
-  page404Name?: string
+export type PagePreservedModule = Module
+export type PageModalsModule = Pick<Module, 'default'>
+export type PageRoutesModule = Module
+
+export interface PagesOption {
+  pagePreservedFiles: Record<string, any>
+  pageModalsFiles: Record<string, any>
+  pageRoutesFiles: Record<string, any>
+  pageRootPath: string
 }
 
-export const useRoutes = ({ pagePath, pageAppName, page404Name }: RoutesOption) => {
-  pagePath = pagePath || 'src/pages'
-  pageAppName = pageAppName || '_app'
-  page404Name = page404Name || '_404'
-  if (pagePath.startsWith('/')) {
-    pagePath = pagePath.substring(1)
-  }
-  if (!pagePath.endsWith('/')) {
-    pagePath = `${pagePath}/`
-  }
-  const PRESERVED = import.meta.glob<Module>(
-    `/${pagePath}(${pageAppName}|${page404Name}).{jsx,tsx}`,
-    {
-      eager: true
-    }
-  )
-  const MODALS = import.meta.glob<Pick<Module, 'default'>>(`${pagePath}**/[+]*.{jsx,tsx}`, {
-    eager: true
-  })
-  const ROUTES = import.meta.glob<Module>([
-    `/${pagePath}**/[\\w[-]*.{jsx,tsx}`,
-    `!**/(${pageAppName}|${page404Name}).*`
-  ])
+export interface RoutesOption {
+  customPagesOption?: PagesOption
+}
 
-  const preservedRoutes = generatePreservedRoutes<Omit<Module, 'Action'>>(PRESERVED)
+export const useRoutes = (options?: RoutesOption) => {
+  options = options || {}
+  const pageOption = options.customPagesOption
+
+  let PRESERVED: Record<string, any>
+  let MODALS: Record<string, any>
+  let ROUTES: Record<string, any>
+  let pageRootPath: string
+  const pageAppName = '_app'
+  const page404Name = '_404'
+
+  if (pageOption) {
+    pageRootPath = pageOption.pageRootPath
+    PRESERVED = pageOption.pagePreservedFiles
+    MODALS = pageOption.pageModalsFiles
+    ROUTES = pageOption.pageRoutesFiles
+  } else {
+    pageRootPath = 'src/pages'
+
+    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}', {
+      eager: true
+    })
+    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}', {
+      eager: true
+    })
+    ROUTES = import.meta.glob<PageRoutesModule>([
+      '/src/pages/**/[\\w[-]*.{jsx,tsx}',
+      '!**/(_app|_404).*'
+    ])
+  }
+  const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED)
   const modalRoutes = generateModalRoutes<Element>(MODALS)
-  const _app: Omit<Module, 'Action'> | undefined = (preservedRoutes as any)?.[pageAppName]
-  const _404: Omit<Module, 'Action'> | undefined = (preservedRoutes as any)?.[page404Name]
+  const _app: Omit<PagePreservedModule, 'Action'> | undefined = (preservedRoutes as any)?.[
+    pageAppName
+  ]
+  const _404: Omit<PagePreservedModule, 'Action'> | undefined = (preservedRoutes as any)?.[
+    page404Name
+  ]
 
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
-      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pagePath}index`) ? { index: true } : {}
+      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`) ? { index: true } : {}
     return {
       ...index,
       lazy: async () => {

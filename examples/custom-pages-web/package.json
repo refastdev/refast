@@ -1,8 +1,8 @@
 {
-  "name": "refast-example-web",
+  "name": "refast-example-custom-pages-web",
   "version": "0.0.0",
   "private": true,
-  "description": "refast-example-web",
+  "description": "refast-example-custom-pages-web",
   "type": "module",
   "main": "src/index.tsx",
   "scripts": {
