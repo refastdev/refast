@@ -28,7 +28,7 @@ export const defaultOptions: RefastPluginOptions = {
       filename: './dist/analyze/analyze.html',
       title: 'analyze',
       template: 'treemap',
-      open: true
+      open: false
     }
   },
   vconsole: {

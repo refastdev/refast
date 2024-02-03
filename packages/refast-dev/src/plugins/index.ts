@@ -23,10 +23,10 @@ export const refastPlugin = (options?: Partial<RefastPluginOptions>): PluginOpti
   if (resolvedOptions.vconsole.open) {
     plugins.push(viteVConsole(resolvedOptions.vconsole.options))
   }
-  if (isProduction && resolvedOptions.legacy) {
+  if (isProduction && resolvedOptions.legacy.open) {
     plugins.push(...legacy(resolvedOptions.legacy.options))
   }
-  if (isProduction && resolvedOptions.compression) {
+  if (isProduction && resolvedOptions.compression.open) {
     plugins.push(viteCompression(resolvedOptions.compression.options))
   }
   if (isProduction && resolvedOptions.visualizer.open) {

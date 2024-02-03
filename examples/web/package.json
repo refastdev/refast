@@ -6,10 +6,9 @@
   "type": "module",
   "main": "src/index.tsx",
   "scripts": {
-    "build": "npx eslint src test && vite build",
+    "build": "vite build",
     "dev": "vite --force",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "npx eslint src test",
     "preview": "vite preview"
   },
   "dependencies": {
