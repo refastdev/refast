@@ -44,8 +44,12 @@
   ],
   "dependencies": {
     "@generouted/react-router": "^1.18.2",
+    "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
-    "react-router-dom": "^6.21.3"
+    "loglevel": "^1.9.1",
+    "react-router-dom": "^6.21.3",
+    "use-force-update": "^1.0.11",
+    "valtio": "^1.13.0"
   },
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
