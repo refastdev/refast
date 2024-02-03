@@ -7,5 +7,8 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "@refastdev/refast-example-web",
+    "@refastdev/refast-example-custom-pages-web"
+  ]
 }

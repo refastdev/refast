@@ -1,5 +1,20 @@
 # @refastdev/refast-dev
 
+## 0.0.2
+
+### Patch Changes
+
+- update version
+
+## 0.0.1
+
+### Patch Changes
+
+- f5f7fd2: update readme
+- 2fe0200: move package to monorepo
+- 2fe0200: move to monorepo
+- router support
+
 ## 0.0.1-alpha.7
 
 ### Patch Changes
