@@ -44,12 +44,14 @@
   ],
   "dependencies": {
     "@generouted/react-router": "^1.18.2",
+    "crypto-js": "^4.2.0",
     "react-router-dom": "^6.21.3"
   },
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
     "@refastdev/config-vite": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
+    "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.2.48",
     "react": ">=18",
     "tsup": "^8.0.1",

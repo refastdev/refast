@@ -27,6 +27,7 @@
     "compat",
     "computeds",
     "concat",
+    "consts",
     "conventionalcommits",
     "corejs",
     "cosmiconfig",

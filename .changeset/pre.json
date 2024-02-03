@@ -1,0 +1,14 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@refastdev/refast-example-custom-pages-web": "0.0.0",
+    "@refastdev/refast-example-web": "0.0.0",
+    "@refastdev/eslint-config": "0.0.0",
+    "@refastdev/config-typescript": "0.0.0",
+    "@refastdev/config-vite": "0.0.0",
+    "@refastdev/refast": "0.0.2",
+    "@refastdev/refast-dev": "0.0.2"
+  },
+  "changesets": []
+}

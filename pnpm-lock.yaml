@@ -184,6 +184,9 @@ importers:
       '@generouted/react-router':
         specifier: ^1.18.2
         version: 1.18.2(react-router-dom@6.21.3)(react@18.2.0)(vite@5.0.12)
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
@@ -197,6 +200,9 @@ importers:
       '@refastdev/eslint-config':
         specifier: workspace:*
         version: link:../config-eslint
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@types/react':
         specifier: ^18.2.48
         version: 18.2.48
@@ -2748,6 +2754,10 @@ packages:
     dependencies:
       '@babel/types': 7.23.9
 
+  /@types/crypto-js@4.2.2:
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+    dev: true
+
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
@@ -3804,6 +3814,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    dev: false
 
   /css-select@5.1.0:
     resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
