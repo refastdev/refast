@@ -10,6 +10,6 @@ export default defineConfig([
       }
     },
     external: ['react', 'react-router-dom'],
-    noExternal: ['@generouted/react-router/core']
+    noExternal: ['@generouted/react-router', 'valtio']
   }
 ])
