@@ -8,6 +8,6 @@ export interface RefastProps {
 }
 
 export const Refast: React.FC<RefastProps> = ({ routerOption }) => {
-  const { Routes } = useRoutes(routerOption || {})
-  return <Routes />
+  const data = useRoutes(routerOption || {})
+  return data ? <data.Routes /> : <div></div>
 }

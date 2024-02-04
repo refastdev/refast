@@ -47,8 +47,7 @@
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "loglevel": "^1.9.1",
-    "use-force-update": "^1.0.11",
-    "valtio": "^1.13.0"
+    "use-force-update": "^1.0.11"
   },
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
@@ -64,7 +63,8 @@
   "peerDependencies": {
     "react": ">=18",
     "vite": ">=4",
-    "react-router-dom": "^6.21.3"
+    "react-router-dom": "^6.21.3",
+    "valtio": "^1.13.0"
   },
   "scripts": {
     "dev": "vitest run index.test.ts",

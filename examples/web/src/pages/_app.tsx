@@ -1,18 +1,24 @@
-import { state } from '@refastdev/refast'
+import { Outlet, state } from '@refastdev/refast'
 
-// const store = state.proxy({
-//   text: 'text'
-// })
-
-console.log(state)
+const store = state.proxy({
+  text: 'text'
+})
 
 export default function App() {
-  // const data = state.useSnapshot(store)
+  const data = state.useSnapshot(store)
   return (
     <div>
-      APP
-      {/* App {data.text} */}
-      {/* <button onClick={() => (store.text = 'click')}>Click</button> */}
+      App
+      <div>
+        <input type="text" value={data.text} onChange={e => (store.text = e.target.value)} />
+      </div>
+      <div>
+        <button onClick={() => (store.text = 'click')}>Click Change Input Text</button>
+      </div>
+      <div>
+        <div>Content:</div>
+        <Outlet />
+      </div>
     </div>
   )
 }

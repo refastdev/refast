@@ -3,7 +3,7 @@ import {
   generatePreservedRoutes,
   generateRegularRoutes
 } from '@generouted/react-router/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Fragment, ReactNode, Suspense } from 'react'
 import { Outlet, RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom'
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom'
@@ -40,7 +40,13 @@ export interface RoutesOption {
   customPagesOption?: PagesOption
 }
 
-export const useRoutes = (options?: RoutesOption) => {
+export interface RoutesReturns {
+  routes: RouteObject[]
+  Routes: Element
+  Modals: Element
+}
+
+const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
   options = options || {}
   const pageOption = options.customPagesOption
 
@@ -59,12 +65,8 @@ export const useRoutes = (options?: RoutesOption) => {
   } else {
     pageRootPath = 'src/pages'
 
-    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}', {
-      eager: true
-    })
-    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}', {
-      eager: true
-    })
+    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}')
+    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}')
     ROUTES = import.meta.glob<PageRoutesModule>([
       '/src/pages/**/[\\w[-]*.{jsx,tsx}',
       '!**/(_app|_404).*'
@@ -72,12 +74,12 @@ export const useRoutes = (options?: RoutesOption) => {
   }
   const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED)
   const modalRoutes = generateModalRoutes<Element>(MODALS)
-  const _app: Omit<PagePreservedModule, 'Action'> | undefined = (preservedRoutes as any)?.[
-    pageAppName
-  ]
-  const _404: Omit<PagePreservedModule, 'Action'> | undefined = (preservedRoutes as any)?.[
-    page404Name
-  ]
+  const _app: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
+    preservedRoutes as any
+  )?.[pageAppName]
+  const _404: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
+    preservedRoutes as any
+  )?.[page404Name]
 
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
@@ -115,7 +117,7 @@ export const useRoutes = (options?: RoutesOption) => {
               const result = await Loader(args)
               return result
             }
-            return undefined
+            return null
           },
           action: (await module())?.Action
         }
@@ -123,20 +125,29 @@ export const useRoutes = (options?: RoutesOption) => {
     }
   })
 
-  const AppElement = _app?.default || Fragment
+  let pageApp: Omit<PagePreservedModule, 'Action'> | undefined = undefined
+  let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined
+  if (_app) {
+    pageApp = await _app()
+  }
+  if (_404) {
+    page404 = await _404()
+  }
+
+  const AppElement = pageApp?.default || Fragment
   const App = () =>
-    _app?.Pending ? (
-      <Suspense fallback={<_app.Pending />} children={<AppElement />} />
+    pageApp?.Pending ? (
+      <Suspense fallback={<pageApp.Pending />} children={<AppElement />} />
     ) : (
       <AppElement />
     )
 
   const app = {
-    Component: _app?.default ? App : Outlet,
-    ErrorBoundary: _app?.Catch,
-    loader: _app?.Loader
+    Component: pageApp?.default ? App : Outlet,
+    ErrorBoundary: pageApp?.Catch,
+    loader: pageApp?.Loader
   }
-  const fallback = { path: '*', Component: _404?.default || Fragment }
+  const fallback = { path: '*', Component: page404?.default || Fragment }
 
   const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }]
   const Routes = () => <RouterProvider router={createBrowserRouter(routes)} />
@@ -150,4 +161,15 @@ export const useRoutes = (options?: RoutesOption) => {
     Routes,
     Modals
   }
+}
+
+export const useRoutes = (options?: RoutesOption) => {
+  const [data, setData] = useState<RoutesReturns>()
+  useEffect(() => {
+    ;(async () => {
+      const routes = await getRoutes(options)
+      setData(routes)
+    })()
+  }, [])
+  return data
 }

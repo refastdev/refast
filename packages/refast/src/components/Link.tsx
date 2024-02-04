@@ -1,7 +1,9 @@
+import { components } from '@generouted/react-router/client'
 import { CSSProperties, ReactNode } from 'react'
 
 import type { RouterParamsType, RouterPathType } from '../hooks'
-import { useNavigate } from '../hooks'
+
+const comps = components<RouterPathType, RouterParamsType>()
 
 interface LinkProps {
   children?: ReactNode
@@ -12,13 +14,9 @@ interface LinkProps {
 }
 
 export function Link(props: LinkProps) {
-  const navigate = useNavigate()
-  const onClick = () => {
-    navigate.to(props.to, props.params)
-  }
   return (
-    <a style={props.style} className={props.className} onClick={onClick}>
+    <comps.Link style={props.style} className={props.className} to={props.to} params={props.params}>
       {props.children}
-    </a>
+    </comps.Link>
   )
 }
