@@ -7,10 +7,8 @@
     "@refastdev/eslint-config": "0.0.0",
     "@refastdev/config-typescript": "0.0.0",
     "@refastdev/config-vite": "0.0.0",
-    "@refastdev/refast": "0.0.2",
-    "@refastdev/refast-dev": "0.0.2"
+    "@refastdev/refast": "0.0.3",
+    "@refastdev/refast-dev": "0.0.3"
   },
-  "changesets": [
-    "tasty-readers-camp"
-  ]
+  "changesets": []
 }

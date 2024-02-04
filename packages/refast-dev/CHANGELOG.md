@@ -1,5 +1,12 @@
 # @refastdev/refast-dev
 
+## 0.0.3
+
+### Patch Changes
+
+- d3fee0d: refast development
+- file routes finish
+
 ## 0.0.3-alpha.0
 
 ### Patch Changes
