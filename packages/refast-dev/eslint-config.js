@@ -33,7 +33,7 @@ module.exports = {
         'semi': [
           // 分号: https://eslint.org/docs/latest/rules/semi
           'warn',
-          'never',
+          'always',
         ],
         'prefer-const': [
           // const声明: https://eslint.org/docs/latest/rules/prefer-const

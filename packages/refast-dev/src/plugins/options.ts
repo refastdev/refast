@@ -53,16 +53,20 @@ export const defaultOptions: RefastPluginOptions = {
     open: true,
     options: {
       strategy: 'single-vendor',
-      // customChunk: (args) => {
-      //   const { file, id, moduleId, root } = args;
-      //   // console.log(id);
-      //   // if (file.startsWith('src/pages/')) {
-      //   //   file = file.substring(4);
-      //   //   file = file.replace(/\.[^.$]+$/, '');
-      //   //   return file;
-      //   // }
-      //   return null;
-      // },
+      customChunk: (args) => {
+        const { file, id, moduleId, root } = args;
+        if (/node_modules\/@refast/.test(file)) {
+          console.log(file);
+          return 'refast';
+        }
+        // console.log(id);
+        // if (file.startsWith('src/pages/')) {
+        //   file = file.substring(4);
+        //   file = file.replace(/\.[^.$]+$/, '');
+        //   return file;
+        // }
+        return null;
+      },
       customSplitting: {
         __commonjsHelpers__: [/some unreachable check/],
         react: [/react/, /react-dom/],
