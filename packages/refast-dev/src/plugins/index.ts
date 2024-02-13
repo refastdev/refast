@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { merge } from 'ts-deepmerge';
 import { PluginOption } from 'vite';
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import viteCompression from 'vite-plugin-compression';
 import { viteVConsole } from 'vite-plugin-vconsole';
 
@@ -31,6 +32,9 @@ export const refastPlugin = (options?: Partial<RefastPluginOptions>): PluginOpti
   }
   if (isProduction && resolvedOptions.visualizer.open) {
     plugins.push(visualizer(resolvedOptions.visualizer.options));
+  }
+  if (isProduction && resolvedOptions.chunkSplit.open) {
+    plugins.push(chunkSplitPlugin(resolvedOptions.chunkSplit.options));
   }
   return plugins;
 };

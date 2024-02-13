@@ -17,8 +17,14 @@
       "log": [
         "./dist/log.d.ts"
       ],
+      "request": [
+        "./dist/request.d.ts"
+      ],
       "state": [
         "./dist/state.d.ts"
+      ],
+      "storage": [
+        "./dist/storage.d.ts"
       ]
     }
   },
@@ -41,10 +47,22 @@
         "default": "./dist/module/log/index.js"
       }
     },
+    "./request": {
+      "import": {
+        "types": "./dist/request.d.ts",
+        "default": "./dist/module/request/index.js"
+      }
+    },
     "./state": {
       "import": {
         "types": "./dist/state.d.ts",
         "default": "./dist/module/state/index.js"
+      }
+    },
+    "./storage": {
+      "import": {
+        "types": "./dist/storage.d.ts",
+        "default": "./dist/module/storage/index.js"
       }
     }
   },

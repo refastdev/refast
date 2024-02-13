@@ -2,6 +2,7 @@ import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import viteCompression from 'vite-plugin-compression';
 import { viteVConsole } from 'vite-plugin-vconsole';
 
@@ -11,6 +12,7 @@ type ViteVConsoleOptions = Parameters<typeof viteVConsole>[0];
 type VisualizerOptions = Parameters<typeof visualizer>[0];
 type LegacyOptions = Parameters<typeof legacy>[0];
 type ViteCompressionOptions = Parameters<typeof viteCompression>[0];
+type ChunkSplitOptions = Parameters<typeof chunkSplitPlugin>[0];
 
 interface RefastPluginOptions {
   appType: 'react' | 'preact';
@@ -31,6 +33,10 @@ interface RefastPluginOptions {
   vconsole: {
     open: boolean;
     options: ViteVConsoleOptions;
+  };
+  chunkSplit: {
+    open: boolean;
+    options: ChunkSplitOptions;
   };
   reactOptions: ReactOptions;
   preactOptions: PreactPluginOptions;
