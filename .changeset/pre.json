@@ -10,5 +10,7 @@
     "@refastdev/refast": "0.0.3",
     "@refastdev/refast-dev": "0.0.3"
   },
-  "changesets": []
+  "changesets": [
+    "fast-donuts-peel"
+  ]
 }

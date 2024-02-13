@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.4-alpha.0
+
+### Patch Changes
+
+- state use zustand
+
 ## 0.0.3
 
 ### Patch Changes

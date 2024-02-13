@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/refast",
-  "version": "0.0.3",
+  "version": "0.0.4-alpha.0",
   "description": "refast",
   "type": "module",
   "main": "dist/src/index.js",
@@ -11,9 +11,15 @@
   ],
   "typesVersions": {
     "*": {
-      "encrypt": ["./dist/encrypt.d.ts"],
-      "log": ["./dist/log.d.ts"],
-      "state": ["./dist/state.d.ts"]
+      "encrypt": [
+        "./dist/encrypt.d.ts"
+      ],
+      "log": [
+        "./dist/log.d.ts"
+      ],
+      "state": [
+        "./dist/state.d.ts"
+      ]
     }
   },
   "exports": {
