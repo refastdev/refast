@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.4-alpha.2
+
+### Patch Changes
+
+- fix: chunk
+
 ## 0.0.4-alpha.1
 
 ### Patch Changes
