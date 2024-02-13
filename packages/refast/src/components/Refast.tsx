@@ -1,7 +1,6 @@
+import { useRoutes } from '@refastdev/refast-router';
+import type { RoutesOption } from '@refastdev/refast-router';
 import React from 'React';
-
-import { useRoutes } from '../router';
-import type { RoutesOption } from '../router/';
 
 export interface RefastProps {
   routerOption?: RoutesOption;

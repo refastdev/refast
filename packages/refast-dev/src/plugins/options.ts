@@ -55,20 +55,17 @@ export const defaultOptions: RefastPluginOptions = {
       strategy: 'single-vendor',
       customChunk: (args) => {
         const { file, id, moduleId, root } = args;
-        if (/node_modules\/@refast/.test(file)) {
-          console.log(file);
+        if (
+          !/refast-router/.test(file) &&
+          (/node_modules\/@refast/.test(file) || /packages\/refast/.test(file))
+        ) {
+          console.log('---yes---', file);
           return 'refast';
         }
-        // console.log(id);
-        // if (file.startsWith('src/pages/')) {
-        //   file = file.substring(4);
-        //   file = file.replace(/\.[^.$]+$/, '');
-        //   return file;
-        // }
         return null;
       },
       customSplitting: {
-        __commonjsHelpers__: [/some unreachable check/],
+        // __commonjsHelpers__: [/some unreachable check/],
         react: [/react/, /react-dom/],
         lodash: [/lodash/],
       },

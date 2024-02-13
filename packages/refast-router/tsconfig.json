@@ -1,0 +1,10 @@
+{
+  "extends": "@refastdev/config-typescript/base.json",
+  "exclude": ["node_modules/**/*"],
+  "include": ["src/**/*", "package.json"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "jsx": "react-jsx",
+    "types": ["vite/client", "vitest/globals"]
+  }
+}

@@ -1,4 +1,4 @@
+import { Link, Outlet, Redirect } from '@refastdev/refast-router/components';
+
+export { Link, Outlet, Redirect };
 export * from './Refast';
-export * from './Redirect';
-export * from './Link';
-export * from './Outlet';

@@ -8,7 +8,7 @@ import { Fragment, ReactNode, Suspense } from 'react';
 import { Outlet, RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
-import { Redirect } from '../components';
+import { Redirect } from './components';
 
 type Element = () => React.JSX.Element;
 type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
@@ -113,7 +113,7 @@ const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
         return {
           Component: Page,
           ErrorBoundary: (await module())?.Catch,
-          loader: async args => {
+          loader: async (args) => {
             const Loader = (await module())?.Loader;
             if (Loader) {
               const result = await Loader(args);

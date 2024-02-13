@@ -7,7 +7,7 @@ interface StoreType {
 }
 
 const { useStore } = create<StoreType>((set, setState) => ({
-  text: '1',
+  text: '333',
   setText: (text: string) => {
     set((state) => {
       state.text = text;
