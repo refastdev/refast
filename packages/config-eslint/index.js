@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         es6: true,
         mocha: true,
         jest: true,
-        jasmine: true
+        jasmine: true,
       },
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint', 'jest'],
@@ -22,27 +22,27 @@ module.exports = {
           'warn',
           2,
           {
-            SwitchCase: 1 // switch的case语句缩进
-          }
+            SwitchCase: 1, // switch的case语句缩进
+          },
         ],
         'quotes': [
           // 单引号: https://eslint.org/docs/latest/rules/quotes
           'warn',
-          'single'
+          'single',
         ],
         'quote-props': ['warn', 'consistent'],
         'semi': [
           // 分号: https://eslint.org/docs/latest/rules/semi
           'warn',
-          'never'
+          'always',
         ],
         'prefer-const': [
           // const声明: https://eslint.org/docs/latest/rules/prefer-const
           'warn',
           {
             destructuring: 'any',
-            ignoreReadBeforeAssign: false
-          }
+            ignoreReadBeforeAssign: false,
+          },
         ],
         '@typescript-eslint/no-explicit-any': 0, // 允许使用any: https://typescript-eslint.io/rules/no-explicit-any/
         'no-unused-vars': 0, // 允许未使用的变量: https://eslint.org/docs/latest/rules/no-unused-vars
@@ -68,8 +68,8 @@ module.exports = {
           2,
           '1tbs',
           {
-            allowSingleLine: true
-          }
+            allowSingleLine: true,
+          },
         ],
         // 注意: 您必须禁用基本规则，因为它可能会报告不正确的错误
         'no-empty-function': 'off',
@@ -80,8 +80,8 @@ module.exports = {
         '@typescript-eslint/no-empty-interface': 'off', // 允许空接口
         'react/display-name': 'off', // jsx允许空export
         'no-constant-condition': 'off', // 允许常数条件
-        '@typescript-eslint/no-this-alias': 'off' // 允许this赋值给其他变量
-      }
-    }
-  ]
-}
+        '@typescript-eslint/no-this-alias': 'off', // 允许this赋值给其他变量
+      },
+    },
+  ],
+};

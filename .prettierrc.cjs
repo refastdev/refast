@@ -14,13 +14,13 @@ module.exports = {
   printWidth: 100, // 每行最长代码长度
   proseWrap: 'preserve', // 使用默认的拆行标准
   quoteProps: 'consistent', // 是否有引号配置
-  semi: false, // 自动加分号
+  semi: true, // 自动加分号
   singleQuote: true, // 单引号
   tabWidth: 2, // 缩进空格数
-  trailingComma: 'none', // 多行使用拖尾逗号
+  trailingComma: 'all', // 多行使用拖尾逗号
   useTabs: false, // 不使用tab缩进
   plugins: [
     '@trivago/prettier-plugin-sort-imports', // 自动排序import
-    'prettier-plugin-sort-json' // 自动对json文件的key排序
-  ]
-}
+    'prettier-plugin-sort-json', // 自动对json文件的key排序
+  ],
+};

@@ -1,13 +1,13 @@
-import React from 'React'
+import React from 'React';
 
-import { useRoutes } from '../router'
-import type { RoutesOption } from '../router/'
+import { useRoutes } from '../router';
+import type { RoutesOption } from '../router/';
 
 export interface RefastProps {
-  routerOption?: RoutesOption
+  routerOption?: RoutesOption;
 }
 
 export const Refast: React.FC<RefastProps> = ({ routerOption }) => {
-  const data = useRoutes(routerOption || {})
-  return data ? <data.Routes /> : <div></div>
-}
+  const data = useRoutes(routerOption || {});
+  return data ? <data.Routes /> : <div></div>;
+};

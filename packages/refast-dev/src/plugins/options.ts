@@ -1,4 +1,4 @@
-import type { RefastPluginOptions } from './types'
+import type { RefastPluginOptions } from './types';
 
 export const defaultOptions: RefastPluginOptions = {
   appType: 'react',
@@ -8,8 +8,8 @@ export const defaultOptions: RefastPluginOptions = {
     open: false,
     options: {
       // 旧浏览器支持
-      targets: ['defaults', 'not IE <= 11', 'ios >= 9']
-    }
+      targets: ['defaults', 'not IE <= 11', 'ios >= 9'],
+    },
   },
   compression: {
     open: true,
@@ -18,8 +18,8 @@ export const defaultOptions: RefastPluginOptions = {
       disable: false,
       threshold: 1025, // 大于此大小的文件会被压缩
       algorithm: 'gzip',
-      ext: '.gz'
-    }
+      ext: '.gz',
+    },
   },
   visualizer: {
     open: true,
@@ -28,8 +28,8 @@ export const defaultOptions: RefastPluginOptions = {
       filename: './dist/analyze/analyze.html',
       title: 'analyze',
       template: 'treemap',
-      open: false
-    }
+      open: false,
+    },
   },
   vconsole: {
     open: false,
@@ -40,15 +40,15 @@ export const defaultOptions: RefastPluginOptions = {
       config: {
         log: {
           maxLogNumber: 1000,
-          showTimestamps: true
+          showTimestamps: true,
         },
         theme: 'light',
         onReady() {
-          console.log('vconsole init success')
-        }
-      }
-    }
+          console.log('vconsole init success');
+        },
+      },
+    },
   },
   reactOptions: {},
-  preactOptions: {}
-}
+  preactOptions: {},
+};

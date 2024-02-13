@@ -1,99 +1,101 @@
 import {
   generateModalRoutes,
   generatePreservedRoutes,
-  generateRegularRoutes
-} from '@generouted/react-router/core'
-import React, { useEffect, useState } from 'react'
-import { Fragment, ReactNode, Suspense } from 'react'
-import { Outlet, RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom'
-import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom'
+  generateRegularRoutes,
+} from '@generouted/react-router/core';
+import React, { useEffect, useState } from 'react';
+import { Fragment, ReactNode, Suspense } from 'react';
+import { Outlet, RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom';
+import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
-import { Redirect } from '../components'
+import { Redirect } from '../components';
 
-type Element = () => React.JSX.Element
-type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element
+type Element = () => React.JSX.Element;
+type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
 
 type Module = {
-  default: Element
-  Loader?: LoaderFunction
-  Action?: ActionFunction
-  Catch?: Element
-  Pending?: Element
-  Loading?: ContainerElement
-  IsRedirect?: () => string | undefined
-}
+  default: Element;
+  Loader?: LoaderFunction;
+  Action?: ActionFunction;
+  Catch?: Element;
+  Pending?: Element;
+  Loading?: ContainerElement;
+  IsRedirect?: () => string | undefined;
+};
 
-type ModuleRouter = () => Promise<Partial<Module>>
+type ModuleRouter = () => Promise<Partial<Module>>;
 
-export type PagePreservedModule = Module
-export type PageModalsModule = Pick<Module, 'default'>
-export type PageRoutesModule = Module
+export type PagePreservedModule = Module;
+export type PageModalsModule = Pick<Module, 'default'>;
+export type PageRoutesModule = Module;
 
 export interface PagesOption {
-  pagePreservedFiles: Record<string, any>
-  pageModalsFiles: Record<string, any>
-  pageRoutesFiles: Record<string, any>
-  pageRootPath: string
+  pagePreservedFiles: Record<string, any>;
+  pageModalsFiles: Record<string, any>;
+  pageRoutesFiles: Record<string, any>;
+  pageRootPath: string;
 }
 
 export interface RoutesOption {
-  customPagesOption?: PagesOption
+  customPagesOption?: PagesOption;
 }
 
 export interface RoutesReturns {
-  routes: RouteObject[]
-  Routes: Element
-  Modals: Element
+  routes: RouteObject[];
+  Routes: Element;
+  Modals: Element;
 }
 
 const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
-  options = options || {}
-  const pageOption = options.customPagesOption
+  options = options || {};
+  const pageOption = options.customPagesOption;
 
-  let PRESERVED: Record<string, any>
-  let MODALS: Record<string, any>
-  let ROUTES: Record<string, any>
-  let pageRootPath: string
-  const pageAppName = '_app'
-  const page404Name = '_404'
+  let PRESERVED: Record<string, any>;
+  let MODALS: Record<string, any>;
+  let ROUTES: Record<string, any>;
+  let pageRootPath: string;
+  const pageAppName = '_app';
+  const page404Name = '_404';
 
   if (pageOption) {
-    pageRootPath = pageOption.pageRootPath
-    PRESERVED = pageOption.pagePreservedFiles
-    MODALS = pageOption.pageModalsFiles
-    ROUTES = pageOption.pageRoutesFiles
+    pageRootPath = pageOption.pageRootPath;
+    PRESERVED = pageOption.pagePreservedFiles;
+    MODALS = pageOption.pageModalsFiles;
+    ROUTES = pageOption.pageRoutesFiles;
   } else {
-    pageRootPath = 'src/pages'
+    pageRootPath = 'src/pages';
 
-    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}')
-    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}')
+    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}');
+    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}');
     ROUTES = import.meta.glob<PageRoutesModule>([
       '/src/pages/**/[\\w[-]*.{jsx,tsx}',
-      '!**/(_app|_404).*'
-    ])
+      '!**/(_app|_404).*',
+    ]);
   }
-  const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED)
-  const modalRoutes = generateModalRoutes<Element>(MODALS)
+  const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED);
+  const modalRoutes = generateModalRoutes<Element>(MODALS);
   const _app: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
-  )?.[pageAppName]
+  )?.[pageAppName];
   const _404: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
-  )?.[page404Name]
+  )?.[page404Name];
 
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
-      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`) ? { index: true } : {}
+      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`)
+        ? { index: true }
+        : {};
     return {
       ...index,
       lazy: async () => {
-        const Element = (await module())?.default || Fragment
-        const Pending = (await module())?.Pending
-        const Loading = (await module())?.Loading
-        const IsRedirect = (await module())?.IsRedirect
-        let redirect: string | undefined = undefined
+        const Element = (await module())?.default || Fragment;
+        const Pending = (await module())?.Pending;
+        const Loading = (await module())?.Loading;
+        const IsRedirect = (await module())?.IsRedirect;
+        let redirect: string | undefined = undefined;
         if (IsRedirect) {
-          redirect = IsRedirect()
+          redirect = IsRedirect();
         }
         const Page = () => {
           return redirect ? (
@@ -106,70 +108,70 @@ const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
             <Suspense fallback={<Pending />} children={<Element />} />
           ) : (
             <Element />
-          )
-        }
+          );
+        };
         return {
           Component: Page,
           ErrorBoundary: (await module())?.Catch,
           loader: async args => {
-            const Loader = (await module())?.Loader
+            const Loader = (await module())?.Loader;
             if (Loader) {
-              const result = await Loader(args)
-              return result
+              const result = await Loader(args);
+              return result;
             }
-            return null
+            return null;
           },
-          action: (await module())?.Action
-        }
-      }
-    }
-  })
+          action: (await module())?.Action,
+        };
+      },
+    };
+  });
 
-  let pageApp: Omit<PagePreservedModule, 'Action'> | undefined = undefined
-  let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined
+  let pageApp: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
+  let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
   if (_app) {
-    pageApp = await _app()
+    pageApp = await _app();
   }
   if (_404) {
-    page404 = await _404()
+    page404 = await _404();
   }
 
-  const AppElement = pageApp?.default || Fragment
+  const AppElement = pageApp?.default || Fragment;
   const App = () =>
     pageApp?.Pending ? (
       <Suspense fallback={<pageApp.Pending />} children={<AppElement />} />
     ) : (
       <AppElement />
-    )
+    );
 
   const app = {
     Component: pageApp?.default ? App : Outlet,
     ErrorBoundary: pageApp?.Catch,
-    loader: pageApp?.Loader
-  }
-  const fallback = { path: '*', Component: page404?.default || Fragment }
+    loader: pageApp?.Loader,
+  };
+  const fallback = { path: '*', Component: page404?.default || Fragment };
 
-  const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }]
-  const Routes = () => <RouterProvider router={createBrowserRouter(routes)} />
+  const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }];
+  const Routes = () => <RouterProvider router={createBrowserRouter(routes)} />;
 
   const Modals = () => {
-    const Modal = modalRoutes[useLocation().state?.modal] || Fragment
-    return <Modal />
-  }
+    const Modal = modalRoutes[useLocation().state?.modal] || Fragment;
+    return <Modal />;
+  };
   return {
     routes,
     Routes,
-    Modals
-  }
-}
+    Modals,
+  };
+};
 
 export const useRoutes = (options?: RoutesOption) => {
-  const [data, setData] = useState<RoutesReturns>()
+  const [data, setData] = useState<RoutesReturns>();
   useEffect(() => {
-    ;(async () => {
-      const routes = await getRoutes(options)
-      setData(routes)
-    })()
-  }, [])
-  return data
-}
+    (async () => {
+      const routes = await getRoutes(options);
+      setData(routes);
+    })();
+  }, []);
+  return data;
+};

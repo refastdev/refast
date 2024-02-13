@@ -1,2 +1,2 @@
-export * from './encrypt'
-export * from './log'
+export * from './encrypt';
+export * from './log';

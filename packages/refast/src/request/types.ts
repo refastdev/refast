@@ -3,71 +3,71 @@ import type {
   AxiosRequestConfig,
   AxiosResponse,
   CreateAxiosDefaults,
-  InternalAxiosRequestConfig
-} from 'axios'
+  InternalAxiosRequestConfig,
+} from 'axios';
 
-import { Encrypt } from '../utils'
+import { Encrypt } from '../utils';
 
 // Encrypt
 export type IsEncryptOption =
   | boolean
   | {
-      isEncryptRequest: boolean
-      isEncryptResponse: boolean
-    }
+      isEncryptRequest: boolean;
+      isEncryptResponse: boolean;
+    };
 
 export interface EncryptRequestHeader {
-  key: string
-  value: string
+  key: string;
+  value: string;
 }
 
 export interface EncryptOption {
   /**
    * is encrypt
    */
-  isEncrypt: IsEncryptOption
+  isEncrypt: IsEncryptOption;
   /**
    * encrypt request header
    */
-  encryptRequestHeader?: EncryptRequestHeader
+  encryptRequestHeader?: EncryptRequestHeader;
 }
 
 export type EncryptConfig = {
   /**
    * encrypt object
    */
-  encrypt: Encrypt
-  defaultOption: EncryptOption
-}
+  encrypt: Encrypt;
+  defaultOption: EncryptOption;
+};
 
 export type RequestConfig = {
   /**
    * encrypt
    */
-  encrypt?: EncryptConfig
+  encrypt?: EncryptConfig;
   /**
    * baseUrl, Examples: https://api.example.com:8080/v1/
    */
-  baseURL?: string
+  baseURL?: string;
   /**
    * timeout, default: 30000 Milliseconds
    */
-  timeout?: number
-} & CreateAxiosDefaults
+  timeout?: number;
+} & CreateAxiosDefaults;
 
 export interface RequestOptions extends AxiosRequestConfig {
-  encryptOption?: EncryptOption
-  [key: string]: any
+  encryptOption?: EncryptOption;
+  [key: string]: any;
 }
 
 // Response
 export interface ResponseDataType<T> {
-  code: number
-  data: T
+  code: number;
+  data: T;
 }
 
-export type VRequest = InternalAxiosRequestConfig
+export type VRequest = InternalAxiosRequestConfig;
 export interface VResponse extends AxiosResponse<ResponseDataType<any>> {
-  config: InternalAxiosRequestConfig & RequestOptions
+  config: InternalAxiosRequestConfig & RequestOptions;
 }
-export type VOptions = AxiosInterceptorOptions
+export type VOptions = AxiosInterceptorOptions;

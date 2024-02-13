@@ -1,5 +1,5 @@
-import { EventMgr } from './define'
+import { EventMgr } from './define';
 
-const eventMgr = new EventMgr()
+const eventMgr = new EventMgr();
 
-export { eventMgr }
+export { eventMgr };

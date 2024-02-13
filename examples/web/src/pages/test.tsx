@@ -1,4 +1,4 @@
-import { Link } from '@refastdev/refast'
+import { Link } from '@refastdev/refast';
 
 export default function Test() {
   return (
@@ -8,5 +8,5 @@ export default function Test() {
         <Link to="/">Jump Index Page</Link>
       </div>
     </div>
-  )
+  );
 }

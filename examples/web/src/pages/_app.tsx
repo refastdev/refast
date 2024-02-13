@@ -1,11 +1,11 @@
-import { Outlet, state } from '@refastdev/refast'
+import { Outlet, state } from '@refastdev/refast';
 
 const store = state.proxy({
-  text: 'text'
-})
+  text: 'text',
+});
 
 export default function App() {
-  const data = state.useSnapshot(store)
+  const data = state.useSnapshot(store);
   return (
     <div>
       App
@@ -20,5 +20,5 @@ export default function App() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

@@ -16,8 +16,8 @@ module.exports = {
         'release',
         'revert',
         'style',
-        'test'
-      ]
-    ]
-  }
-}
+        'test',
+      ],
+    ],
+  },
+};

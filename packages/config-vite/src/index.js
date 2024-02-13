@@ -1,5 +1,5 @@
-import dts from 'vite-plugin-dts'
-import { externalizeDeps } from 'vite-plugin-externalize-deps'
+import dts from 'vite-plugin-dts';
+import { externalizeDeps } from 'vite-plugin-externalize-deps';
 
 /**
  * @type {import('vite').UserConfig}
@@ -11,10 +11,10 @@ const base = {
   envDir: 'scripts/env', // 指定加载env文件的目录
   experimental: {
     // 启用实验性支持
-    hmrPartialAccept: true
+    hmrPartialAccept: true,
   },
   json: {
-    stringify: true // 导入的 JSON 会被转换为 export default JSON.parse("..."), 这样会比转译成对象字面量性能更好
+    stringify: true, // 导入的 JSON 会被转换为 export default JSON.parse("..."), 这样会比转译成对象字面量性能更好
   },
   logLevel: 'info', // 日志等级
   plugins: [dts({ include: ['src'] })],
@@ -29,15 +29,15 @@ const base = {
     outDir: 'dist', // 输出目录
     reportCompressedSize: false, // gzip压缩大小报告, 禁用可以提高构建速度
     sourcemap: true, // sourcemap
-    target: 'es2015' // 打包目标平台
+    target: 'es2015', // 打包目标平台
   },
   test: {
     // 测试: https://cn.vitest.dev/config/
     include: ['test/**/*.test.?(c|m)[jt]s?(x)'],
     exclude: ['**/node_modules/**', '**/build/**'],
-    globals: true
-  }
-}
+    globals: true,
+  },
+};
 
 /**
  * @param {*} param0 config
@@ -55,8 +55,8 @@ const getLib = ({ libName, entry, exceptDeps }) => ({
       entry,
       formats: ['es'],
       name: libName,
-      fileName: 'index'
-    }
+      fileName: 'index',
+    },
   },
   plugins: [
     // 外部化模块依赖, 发布库时需要
@@ -67,14 +67,14 @@ const getLib = ({ libName, entry, exceptDeps }) => ({
       nodeBuiltins: true,
       peerDeps: true,
       optionalDeps: true,
-      except: exceptDeps || []
+      except: exceptDeps || [],
     }),
-    ...base.plugins
+    ...base.plugins,
   ],
   test: {
     ...base.test,
-    environment: 'node'
-  }
-})
+    environment: 'node',
+  },
+});
 
-export { base, getLib }
+export { base, getLib };

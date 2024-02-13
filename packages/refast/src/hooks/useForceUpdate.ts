@@ -1,3 +1,3 @@
-import useForceUpdate from 'use-force-update'
+import useForceUpdate from 'use-force-update';
 
-export { useForceUpdate }
+export { useForceUpdate };

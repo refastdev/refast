@@ -1,21 +1,21 @@
-import { Suspense as _Suspense, useRef as _useRef } from 'react'
-import type { INTERNAL_Snapshot } from 'valtio'
+import { Suspense as _Suspense, useRef as _useRef } from 'react';
+import type { INTERNAL_Snapshot } from 'valtio';
 import {
   proxy as _proxy,
   ref as _ref,
   snapshot as _snapshot,
   subscribe as _subscribe,
-  useSnapshot as _useSnapshot
-} from 'valtio'
-import { subscribeKey as _subscribeKey, useProxy as _useProxy } from 'valtio/utils'
+  useSnapshot as _useSnapshot,
+} from 'valtio';
+import { subscribeKey as _subscribeKey, useProxy as _useProxy } from 'valtio/utils';
 
-export type Snapshot<T> = INTERNAL_Snapshot<T>
-export type SubCallback = Parameters<typeof _subscribe>[1]
-export type AsRef = ReturnType<typeof _ref>
-export type HandlePromise = Parameters<typeof _snapshot>[1]
+export type Snapshot<T> = INTERNAL_Snapshot<T>;
+export type SubCallback = Parameters<typeof _subscribe>[1];
+export type AsRef = ReturnType<typeof _ref>;
+export type HandlePromise = Parameters<typeof _snapshot>[1];
 
-export type UseSnapshotOptions = Parameters<typeof _useSnapshot>[1]
-export type UseProxyOptions = NonNullable<Parameters<typeof _useSnapshot>[1]>
+export type UseSnapshotOptions = Parameters<typeof _useSnapshot>[1];
+export type UseProxyOptions = NonNullable<Parameters<typeof _useSnapshot>[1]>;
 /**
  * subscribeKey
  * 订阅代理的原始值改变事件
@@ -31,47 +31,47 @@ export function subscribeKey<T extends object, K extends keyof T>(
   proxyObject: T,
   key: K,
   callback: (value: T[K]) => void,
-  notifyInSync?: boolean
+  notifyInSync?: boolean,
 ): () => void {
-  return _subscribeKey(proxyObject, key, callback, notifyInSync)
+  return _subscribeKey(proxyObject, key, callback, notifyInSync);
 }
 
 export function proxy<T extends object>(initialObject?: T): T {
-  return _proxy(initialObject)
+  return _proxy(initialObject);
 }
 
 export function ref<T extends object>(obj: T): T & AsRef {
-  return _ref(obj)
+  return _ref(obj);
 }
 
 export function snapshot<T extends object>(
   proxyObject: T,
-  handlePromise?: HandlePromise
+  handlePromise?: HandlePromise,
 ): Snapshot<T> {
-  return _snapshot(proxyObject, handlePromise)
+  return _snapshot(proxyObject, handlePromise);
 }
 
 export function subscribe<T extends object>(
   proxyObject: T,
   callback: SubCallback,
-  notifyInSync?: boolean
+  notifyInSync?: boolean,
 ): () => void {
-  return _subscribe(proxyObject, callback, notifyInSync)
+  return _subscribe(proxyObject, callback, notifyInSync);
 }
 
-export const AsyncData = _Suspense
+export const AsyncData = _Suspense;
 
 export function useRef<T extends object>(initialObject?: T): T {
-  return _useRef(_proxy(initialObject)).current
+  return _useRef(_proxy(initialObject)).current;
 }
 
 export function useSnapshot<T extends object>(
   proxyObject: T,
-  options?: UseSnapshotOptions
+  options?: UseSnapshotOptions,
 ): Snapshot<T> {
-  return _useSnapshot(proxyObject, options)
+  return _useSnapshot(proxyObject, options);
 }
 
 export function useProxy<T extends object>(proxy: T, options?: UseProxyOptions): T {
-  return _useProxy(proxy, options)
+  return _useProxy(proxy, options);
 }

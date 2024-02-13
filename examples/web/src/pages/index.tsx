@@ -1,4 +1,4 @@
-import { Link } from '@refastdev/refast'
+import { Link } from '@refastdev/refast';
 
 export default function Index() {
   return (
@@ -13,5 +13,5 @@ export default function Index() {
         </div>
       </div>
     </div>
-  )
+  );
 }
