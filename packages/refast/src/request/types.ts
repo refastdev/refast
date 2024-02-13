@@ -6,7 +6,7 @@ import type {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import { Encrypt } from '../utils';
+import type { Encrypt } from '../../module/encrypt';
 
 // Encrypt
 export type IsEncryptOption =

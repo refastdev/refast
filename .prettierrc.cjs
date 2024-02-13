@@ -1,6 +1,6 @@
 /** @type {import("prettier").Config} */
 module.exports = {
-  arrowParens: 'avoid', // 只有一个参数的箭头函数也带括号, 不带括号是avoid
+  arrowParens: 'always', // 只有一个参数的箭头函数也带括号, 不带括号是avoid
   bracketSameLine: false, // </>放在最后一行的末尾
   bracketSpacing: true, // 大括号间使用空格
   htmlWhitespaceSensitivity: 'ignore',

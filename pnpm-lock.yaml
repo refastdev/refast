@@ -96,6 +96,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      zustand:
+        specifier: ^4.5.0
+        version: 4.5.0(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@refastdev/refast-dev':
         specifier: workspace:*
@@ -190,6 +193,9 @@ importers:
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
+      immer:
+        specifier: ^10.0.3
+        version: 10.0.3
       loglevel:
         specifier: ^1.9.1
         version: 1.9.1
@@ -202,6 +208,9 @@ importers:
       valtio:
         specifier: ^1.13.0
         version: 1.13.0(@types/react@18.2.48)(react@18.2.0)
+      zustand:
+        specifier: ^4.5.0
+        version: 4.5.0(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@refastdev/config-typescript':
         specifier: workspace:*
@@ -4904,6 +4913,10 @@ packages:
     resolution: {integrity: sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==}
     engines: {node: '>= 4'}
 
+  /immer@10.0.3:
+    resolution: {integrity: sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -8103,4 +8116,25 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
+
+  /zustand@4.5.0(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0):
+    resolution: {integrity: sha512-zlVFqS5TQ21nwijjhJlx4f9iGrXSL0o/+Dpy4txAP22miJ8Ti6c1Ol1RLNN98BMib83lmDH/2KmLwaNXpjrO1A==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.48
+      immer: 10.0.3
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

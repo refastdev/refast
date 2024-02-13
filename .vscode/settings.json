@@ -74,6 +74,8 @@
     "graphemer",
     "hasown",
     "humanwhocodes",
+    "immer",
+    "immerable",
     "imurmurhash",
     "Initialze",
     "initialzed",
@@ -207,6 +209,7 @@
     "wrappy",
     "yallist",
     "yargs",
-    "yocto"
+    "yocto",
+    "zustand"
   ]
 }

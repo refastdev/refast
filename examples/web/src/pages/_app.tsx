@@ -1,19 +1,30 @@
-import { Outlet, state } from '@refastdev/refast';
+import { Outlet } from '@refastdev/refast';
+import { create } from '@refastdev/refast/state';
 
-const store = state.proxy({
+interface StoreType {
+  text: string;
+  setText: (text: string) => void;
+}
+
+const { useStore } = create<StoreType>((set, setState) => ({
   text: 'text',
-});
+  setText: (text: string) => {
+    set((state) => {
+      state.text = text;
+    });
+  },
+}));
 
 export default function App() {
-  const data = state.useSnapshot(store);
+  const state = useStore((state) => state);
   return (
     <div>
       App
       <div>
-        <input type="text" value={data.text} onChange={e => (store.text = e.target.value)} />
+        <input type="text" value={state.text} onChange={(e) => state.setText(e.target.value)} />
       </div>
       <div>
-        <button onClick={() => (store.text = 'click')}>Click Change Input Text</button>
+        <button onClick={() => state.setText('click')}>Click Change Input Text</button>
       </div>
       <div>
         <div>Content:</div>

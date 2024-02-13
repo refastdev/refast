@@ -1,4 +1,4 @@
-import { Encrypt } from '../utils/encrypt';
+import type { Encrypt } from '../../module/encrypt';
 
 export type StorageType = 'localStorage' | 'sessionStorage';
 

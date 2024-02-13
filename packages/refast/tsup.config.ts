@@ -1,16 +1,23 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: ['src/index.ts', './state/index.ts'],
+    entry: [
+      'src/index.ts',
+      'module/encrypt/index.ts',
+      'module/log/index.ts',
+      'module/state/index.ts',
+    ],
     format: ['esm'],
     dts: {
       entry: {
         index: './src/index.ts',
-        state: './src/state/index.ts'
-      }
+        encrypt: './module/encrypt/index.ts',
+        log: './module/log/index.ts',
+        state: './module/state/index.ts',
+      },
     },
     external: ['react', 'react-router-dom'],
-    noExternal: ['@generouted/react-router']
-  }
-])
+    noExternal: ['@generouted/react-router'],
+  },
+]);
