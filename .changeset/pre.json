@@ -11,6 +11,7 @@
     "@refastdev/refast-dev": "0.0.3"
   },
   "changesets": [
-    "fast-donuts-peel"
+    "fast-donuts-peel",
+    "smooth-ghosts-tap"
   ]
 }

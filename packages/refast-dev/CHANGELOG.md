@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.4-alpha.1
+
+### Patch Changes
+
+- refast update
+
 ## 0.0.4-alpha.0
 
 ### Patch Changes
