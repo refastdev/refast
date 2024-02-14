@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.4-alpha.4
+
+### Patch Changes
+
+- fix: routes chunk
+
 ## 0.0.4-alpha.3
 
 ### Patch Changes
