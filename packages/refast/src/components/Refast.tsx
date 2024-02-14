@@ -1,12 +1,17 @@
-import { useRoutes } from '@refastdev/refast-router';
-import type { RoutesOption } from '@refastdev/refast-router';
 import React from 'React';
 
+import type { RoutesOption } from '../router';
+import { useRoutes } from '../router';
+
 export interface RefastProps {
-  routerOption?: RoutesOption;
+  routesOption?: RoutesOption;
+  children?: React.JSX.Element;
 }
 
-export const Refast: React.FC<RefastProps> = ({ routerOption }) => {
-  const data = useRoutes(routerOption || {});
-  return data ? <data.Routes /> : <div></div>;
+export const Refast: React.FC<RefastProps> = ({ routesOption, children }) => {
+  if (routesOption) {
+    const data = useRoutes(routesOption || {});
+    return data ? <data.Routes /> : <div>{children}</div>;
+  }
+  return <div>{children}</div>;
 };

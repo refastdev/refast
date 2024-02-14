@@ -37,7 +37,7 @@ export interface PagesOption {
 }
 
 export interface RoutesOption {
-  customPagesOption?: PagesOption;
+  pages: PagesOption;
 }
 
 export interface RoutesReturns {
@@ -46,9 +46,9 @@ export interface RoutesReturns {
   Modals: Element;
 }
 
-const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
+const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   options = options || {};
-  const pageOption = options.customPagesOption;
+  const pageOption = options.pages;
 
   let PRESERVED: Record<string, any>;
   let MODALS: Record<string, any>;
@@ -63,14 +63,15 @@ const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
     MODALS = pageOption.pageModalsFiles;
     ROUTES = pageOption.pageRoutesFiles;
   } else {
-    pageRootPath = 'src/pages';
+    throw new Error('pages is undefined');
+    // pageRootPath = 'src/pages';
 
-    PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}');
-    MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}');
-    ROUTES = import.meta.glob<PageRoutesModule>([
-      '/src/pages/**/[\\w[-]*.{jsx,tsx}',
-      '!**/(_app|_404).*',
-    ]);
+    // PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}');
+    // MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}');
+    // ROUTES = import.meta.glob<PageRoutesModule>([
+    //   '/src/pages/**/[\\w[-]*.{jsx,tsx}',
+    //   '!**/(_app|_404).*',
+    // ]);
   }
   const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED);
   const modalRoutes = generateModalRoutes<Element>(MODALS);
@@ -165,7 +166,7 @@ const getRoutes = async (options?: RoutesOption): Promise<RoutesReturns> => {
   };
 };
 
-export const useRoutes = (options?: RoutesOption) => {
+export const useRoutes = (options: RoutesOption) => {
   const [data, setData] = useState<RoutesReturns>();
   useEffect(() => {
     (async () => {

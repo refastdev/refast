@@ -4,6 +4,9 @@ export const defaultOptions: RefastPluginOptions = {
   appType: 'react',
   isProduction: process.env.NODE_ENV === 'production',
   isDevelopment: process.env.NODE_ENV !== 'production',
+  routes: {
+    open: true,
+  },
   legacy: {
     open: false,
     options: {
@@ -55,17 +58,13 @@ export const defaultOptions: RefastPluginOptions = {
       strategy: 'single-vendor',
       customChunk: (args) => {
         const { file, id, moduleId, root } = args;
-        if (
-          !/refast-router/.test(file) &&
-          (/node_modules\/@refast/.test(file) || /packages\/refast/.test(file))
-        ) {
-          console.log('---yes---', file);
+        if (/node_modules\/@refast/.test(file) || /packages\/refast/.test(file)) {
           return 'refast';
         }
         return null;
       },
       customSplitting: {
-        // __commonjsHelpers__: [/some unreachable check/],
+        __commonjsHelpers__: [/some unreachable check/],
         react: [/react/, /react-dom/],
         lodash: [/lodash/],
       },

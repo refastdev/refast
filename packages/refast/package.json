@@ -92,6 +92,7 @@
     "nextjs"
   ],
   "dependencies": {
+    "@generouted/react-router": "^1.18.2",
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
@@ -111,8 +112,8 @@
     "vitest": "^1.2.1"
   },
   "peerDependencies": {
-    "@refastdev/refast-router": "workspace:*",
     "react": ">=18",
+    "react-router-dom": "^6.21.3",
     "vite": ">=4"
   },
   "scripts": {

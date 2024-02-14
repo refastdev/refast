@@ -8,6 +8,7 @@ import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import viteCompression from 'vite-plugin-compression';
 import { viteVConsole } from 'vite-plugin-vconsole';
 
+import { GenerateRoutes } from './generateRoutes';
 import { defaultOptions } from './options';
 import type { RefastPluginOptions } from './types';
 
@@ -16,6 +17,10 @@ export const refastPlugin = (options?: Partial<RefastPluginOptions>): PluginOpti
   const resolvedOptions = merge(defaultOptions, options || {}) as RefastPluginOptions;
   const isProduction = resolvedOptions.isProduction;
   const plugins: PluginOption[] = [];
+
+  if (resolvedOptions.routes.open) {
+    plugins.push(GenerateRoutes(resolvedOptions.routes.options));
+  }
   if (resolvedOptions.appType === 'react') {
     plugins.push(...react(resolvedOptions.reactOptions));
   } else if (resolvedOptions.appType === 'preact') {
