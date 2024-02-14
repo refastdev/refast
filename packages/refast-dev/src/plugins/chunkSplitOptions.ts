@@ -2,7 +2,7 @@ import { ChunkSplitOptions } from './types';
 
 const isRoutes = (file: string) => {
   return (
-    /node_modules\/@refastdev\/refast\/routes/.test(file) ||
+    /node_modules\/@refastdev\/refast\/dist\/routes/.test(file) ||
     /packages\/refast\/dist\/module\/routes/.test(file)
   );
 };
