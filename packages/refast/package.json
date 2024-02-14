@@ -102,6 +102,9 @@
   ],
   "dependencies": {
     "@generouted/react-router": "^1.18.2",
+    "@lingui/core": "^4.7.0",
+    "@lingui/macro": "^4.7.0",
+    "@lingui/react": "^4.7.0",
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
