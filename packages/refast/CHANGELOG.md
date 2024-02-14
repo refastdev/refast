@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.4-alpha.3
+
+### Patch Changes
+
+- routes refactoring
+
 ## 0.0.4-alpha.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/refast-dev",
-  "version": "0.0.4-alpha.2",
+  "version": "0.0.4-alpha.3",
   "description": "refast dev toolkit",
   "main": "dist/index.js",
   "types": "./dist/src/index.d.ts",
