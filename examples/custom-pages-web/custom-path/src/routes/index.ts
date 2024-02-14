@@ -5,7 +5,7 @@ import type {
   PagesOption,
 } from '@refastdev/refast';
 
-export const customPagesOption: PagesOption = {
+export const pages: PagesOption = {
   pageRootPath: 'custom-path/src/pages',
   pagePreservedFiles: import.meta.glob<PagePreservedModule>(
     '/custom-path/src/pages/(_app|_404).{jsx,tsx}',

@@ -8,6 +8,13 @@ export default defineConfig({
   plugins: [
     refastPlugin({
       appType: 'react',
+      generateRoutes: {
+        open: true,
+        options: {
+          pageRoot: 'custom-path/src/pages',
+          generatePath: 'custom-path/src/routes/index.ts',
+        },
+      },
     }),
   ],
 });

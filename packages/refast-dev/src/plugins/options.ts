@@ -1,11 +1,12 @@
+import { chunkSplitOptions } from './chunkSplitOptions';
 import type { RefastPluginOptions } from './types';
 
 export const defaultOptions: RefastPluginOptions = {
   appType: 'react',
   isProduction: process.env.NODE_ENV === 'production',
   isDevelopment: process.env.NODE_ENV !== 'production',
-  routes: {
-    open: true,
+  generateRoutes: {
+    open: false,
   },
   legacy: {
     open: false,
@@ -54,21 +55,7 @@ export const defaultOptions: RefastPluginOptions = {
   },
   chunkSplit: {
     open: true,
-    options: {
-      strategy: 'single-vendor',
-      customChunk: (args) => {
-        const { file, id, moduleId, root } = args;
-        if (/node_modules\/@refast/.test(file) || /packages\/refast/.test(file)) {
-          return 'refast';
-        }
-        return null;
-      },
-      customSplitting: {
-        __commonjsHelpers__: [/some unreachable check/],
-        react: [/react/, /react-dom/],
-        lodash: [/lodash/],
-      },
-    },
+    options: chunkSplitOptions,
   },
   reactOptions: {},
   preactOptions: {},

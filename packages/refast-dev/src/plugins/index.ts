@@ -18,8 +18,8 @@ export const refastPlugin = (options?: Partial<RefastPluginOptions>): PluginOpti
   const isProduction = resolvedOptions.isProduction;
   const plugins: PluginOption[] = [];
 
-  if (resolvedOptions.routes.open) {
-    plugins.push(GenerateRoutes(resolvedOptions.routes.options));
+  if (resolvedOptions.generateRoutes.open) {
+    plugins.push(GenerateRoutes(resolvedOptions.generateRoutes.options));
   }
   if (resolvedOptions.appType === 'react') {
     plugins.push(...react(resolvedOptions.reactOptions));

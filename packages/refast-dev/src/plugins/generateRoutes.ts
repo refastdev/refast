@@ -9,28 +9,56 @@ export interface GenerateRoutesOptions {
    */
   pageRoot: string;
   /**
-   * default: 'node_modules/.refast/routes.js'
+   * default: 'src/router/routes.ts'
    */
   generatePath: string;
 }
 
 const defaultOptions: GenerateRoutesOptions = {
   pageRoot: 'src/pages',
-  generatePath: 'node_modules/.refast/routes.js',
+  generatePath: 'src/router/routes.ts',
 };
 
 const generate = (options: GenerateRoutesOptions) => {
-  const routesStr = `export const pages = {
+  const lowPath = options.generatePath.trim().toLocaleLowerCase();
+  if (lowPath.endsWith('.ts')) {
+    const routesStr = `import type {
+  PageModalsModule,
+  PagePreservedModule,
+  PageRoutesModule,
+  PagesOption,
+} from '@refastdev/refast';
+
+export const pages: PagesOption = {
   pageRootPath: '${options.pageRoot}',
-  pagePreservedFiles: import.meta.glob('/${options.pageRoot}/(_app|_404).{jsx,tsx}'),
-  pageModalsFiles: import.meta.glob('/${options.pageRoot}/**/[+]*.{jsx,tsx}'),
-  pageRoutesFiles: import.meta.glob([
-    '/${options.pageRoot}/**/[\\w[-]*.{jsx,tsx}',
+  pagePreservedFiles: import.meta.glob<PagePreservedModule>(
+    '/${options.pageRoot}/(_app|_404).{jsx,tsx}',
+  ),
+  pageModalsFiles: import.meta.glob<PageModalsModule>('/${options.pageRoot}/**/[+]*.{jsx,tsx}'),
+  pageRoutesFiles: import.meta.glob<PageRoutesModule>([
+    '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
     '!**/(_app|_404).*',
   ]),
 };
 `;
-  const routesTypeStr = `declare const pages: {
+    const routesTsPath = path.resolve(process.cwd(), options.generatePath);
+    const dirname = path.dirname(routesTsPath);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
+    fs.writeFileSync(routesTsPath, routesStr, { encoding: 'utf8' });
+  } else if (lowPath.endsWith('.js')) {
+    const routesStr = `export const pages = {
+  pageRootPath: '${options.pageRoot}',
+  pagePreservedFiles: import.meta.glob('/${options.pageRoot}/(_app|_404).{jsx,tsx}'),
+  pageModalsFiles: import.meta.glob('/${options.pageRoot}/**/[+]*.{jsx,tsx}'),
+  pageRoutesFiles: import.meta.glob([
+    '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
+    '!**/(_app|_404).*',
+  ]),
+};
+`;
+    const routesTypeStr = `declare const pages: {
     pageRootPath: string;
     pagePreservedFiles: Record<string, any>;
     pageModalsFiles: Record<string, any>;
@@ -39,16 +67,18 @@ const generate = (options: GenerateRoutesOptions) => {
 
 export { pages };
 `;
-  const routesJsPath = path.resolve(process.cwd(), options.generatePath);
-  const name = path.basename(options.generatePath, '.js');
-  const dirname = path.dirname(routesJsPath);
-  const routesTypePath = path.resolve(dirname, `${name}.d.ts`);
-
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true });
+    const routesJsPath = path.resolve(process.cwd(), options.generatePath);
+    const name = path.basename(options.generatePath, '.js');
+    const dirname = path.dirname(routesJsPath);
+    const routesTypePath = path.resolve(dirname, `${name}.d.ts`);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
+    fs.writeFileSync(routesJsPath, routesStr, { encoding: 'utf8' });
+    fs.writeFileSync(routesTypePath, routesTypeStr, { encoding: 'utf8' });
+  } else {
+    throw new Error(`generatePath parse error: ${options.generatePath}`);
   }
-  fs.writeFileSync(routesJsPath, routesStr, { encoding: 'utf8' });
-  fs.writeFileSync(routesTypePath, routesTypeStr, { encoding: 'utf8' });
 };
 
 export function GenerateRoutes(options?: Partial<GenerateRoutesOptions>): Plugin {

@@ -8,19 +8,19 @@ import { viteVConsole } from 'vite-plugin-vconsole';
 
 import type { GenerateRoutesOptions } from './generateRoutes';
 
-type PreactPluginOptions = Parameters<typeof preact>[0];
-type ReactOptions = Parameters<typeof react>[0];
-type ViteVConsoleOptions = Parameters<typeof viteVConsole>[0];
-type VisualizerOptions = Parameters<typeof visualizer>[0];
-type LegacyOptions = Parameters<typeof legacy>[0];
-type ViteCompressionOptions = Parameters<typeof viteCompression>[0];
-type ChunkSplitOptions = Parameters<typeof chunkSplitPlugin>[0];
+export type PreactPluginOptions = Parameters<typeof preact>[0];
+export type ReactOptions = Parameters<typeof react>[0];
+export type ViteVConsoleOptions = Parameters<typeof viteVConsole>[0];
+export type VisualizerOptions = Parameters<typeof visualizer>[0];
+export type LegacyOptions = Parameters<typeof legacy>[0];
+export type ViteCompressionOptions = Parameters<typeof viteCompression>[0];
+export type ChunkSplitOptions = Parameters<typeof chunkSplitPlugin>[0];
 
 interface RefastPluginOptions {
   appType: 'react' | 'preact';
   isProduction: boolean;
   isDevelopment: boolean;
-  routes: {
+  generateRoutes: {
     open: boolean;
     options?: GenerateRoutesOptions;
   };

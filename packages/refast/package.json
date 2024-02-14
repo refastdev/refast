@@ -20,6 +20,9 @@
       "request": [
         "./dist/request.d.ts"
       ],
+      "routes": [
+        "./dist/routes.d.ts"
+      ],
       "state": [
         "./dist/state.d.ts"
       ],
@@ -51,6 +54,12 @@
       "import": {
         "types": "./dist/request.d.ts",
         "default": "./dist/module/request/index.js"
+      }
+    },
+    "./routes": {
+      "import": {
+        "types": "./dist/routes.d.ts",
+        "default": "./dist/module/routes/index.js"
       }
     },
     "./state": {

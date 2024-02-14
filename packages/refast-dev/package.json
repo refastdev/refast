@@ -70,7 +70,7 @@
   "scripts": {
     "build": "pnpm run lint && vite build",
     "dev": "vite build && node ./dist/index.js",
-    "lint": "npx eslint bin test",
+    "lint": "npx eslint src bin test",
     "test": "vitest run index.test.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",

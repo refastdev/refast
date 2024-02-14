@@ -65,7 +65,6 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   } else {
     throw new Error('pages is undefined');
     // pageRootPath = 'src/pages';
-
     // PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}');
     // MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}');
     // ROUTES = import.meta.glob<PageRoutesModule>([
