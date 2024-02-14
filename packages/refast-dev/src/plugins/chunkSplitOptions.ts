@@ -17,6 +17,9 @@ export const chunkSplitOptions: ChunkSplitOptions = {
   strategy: 'single-vendor',
   customChunk: (args) => {
     const { file, id, moduleId, root } = args;
+    if (isRoutes(file)) {
+      return 'refast-routes';
+    }
     if (isRefast(file)) {
       return 'refast';
     }
