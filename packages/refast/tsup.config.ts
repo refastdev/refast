@@ -23,7 +23,7 @@ export default defineConfig([
         storage: './module/storage/index.ts',
       },
     },
-    external: ['react', 'react-router-dom', '@refastdev/refast-router'],
+    external: ['react', 'react-router-dom'],
     noExternal: ['@generouted/react-router'],
   },
 ]);

@@ -102,9 +102,6 @@
   ],
   "dependencies": {
     "@generouted/react-router": "^1.18.2",
-    "@lingui/core": "^4.7.0",
-    "@lingui/macro": "^4.7.0",
-    "@lingui/react": "^4.7.0",
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
@@ -116,6 +113,7 @@
     "@refastdev/config-typescript": "workspace:*",
     "@refastdev/config-vite": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
+    "@refastdev/i18n": "workspace:*",
     "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.2.48",
     "react": ">=18",
