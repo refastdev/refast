@@ -111,7 +111,6 @@
   },
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
-    "@refastdev/config-vite": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
     "@refastdev/i18n": "workspace:*",
     "@types/crypto-js": "^4.2.2",
@@ -127,9 +126,10 @@
     "vite": ">=4"
   },
   "scripts": {
-    "dev": "vitest run index.test.ts",
     "build": "pnpm run lint && tsup --clean",
     "lint": "npx eslint src test module",
-    "test": "vitest run index.test.ts"
+    "test": "vitest run test/index.test.ts",
+    "prepublishOnly": "pnpm run build",
+    "release": "npm publish"
   }
 }
