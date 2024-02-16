@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.4-alpha.8
+
+### Patch Changes
+
+- locale
+
 ## 0.0.4-alpha.7
 
 ### Patch Changes
