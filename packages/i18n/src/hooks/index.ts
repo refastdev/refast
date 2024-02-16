@@ -1,1 +1,1 @@
-export * from './useLocale';
+export * from './useText';

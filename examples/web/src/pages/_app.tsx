@@ -17,7 +17,6 @@ const { useStore } = create<StoreType>((set, setState) => ({
 
 export default function App() {
   const { i18n } = useText();
-  console.log(i18n.t('test'));
   const state = useStore((state) => state);
   return (
     <div>
@@ -29,7 +28,8 @@ export default function App() {
         <button onClick={() => state.setText('click')}>Click Change Input Text</button>
       </div>
       <div>
-        <button onClick={() => i18n.loadLocale('zh-CN')}>Change Language</button>
+        <div>Locale Text: {i18n.t('test')}</div>
+        <button onClick={() => i18n.loadLocale('en-US')}>Change Language</button>
       </div>
       <div>
         <div>Content:</div>
