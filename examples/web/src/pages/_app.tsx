@@ -1,4 +1,4 @@
-import { Outlet } from '@refastdev/refast';
+import { Outlet, useText } from '@refastdev/refast';
 import { create } from '@refastdev/refast/state';
 
 interface StoreType {
@@ -16,6 +16,8 @@ const { useStore } = create<StoreType>((set, setState) => ({
 }));
 
 export default function App() {
+  const { i18n } = useText();
+  console.log(i18n.t('test'));
   const state = useStore((state) => state);
   return (
     <div>
@@ -25,6 +27,9 @@ export default function App() {
       </div>
       <div>
         <button onClick={() => state.setText('click')}>Click Change Input Text</button>
+      </div>
+      <div>
+        <button onClick={() => i18n.loadLocale('zh-CN')}>Change Language</button>
       </div>
       <div>
         <div>Content:</div>

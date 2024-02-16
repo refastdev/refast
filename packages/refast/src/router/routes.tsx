@@ -29,15 +29,11 @@ export type PagePreservedModule = Module;
 export type PageModalsModule = Pick<Module, 'default'>;
 export type PageRoutesModule = Module;
 
-export interface PagesOption {
+export interface RoutesOption {
   pagePreservedFiles: Record<string, any>;
   pageModalsFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
   pageRootPath: string;
-}
-
-export interface RoutesOption {
-  pages: PagesOption;
 }
 
 export interface RoutesReturns {
@@ -47,8 +43,7 @@ export interface RoutesReturns {
 }
 
 const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
-  options = options || {};
-  const pageOption = options.pages;
+  const pageOption = options || {};
 
   let PRESERVED: Record<string, any>;
   let MODALS: Record<string, any>;

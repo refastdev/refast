@@ -7,9 +7,18 @@ const isRoutes = (file: string) => {
   );
 };
 
+const isLocale = (file: string) => {
+  return (
+    /node_modules\/@refastdev\/refast\/dist\/module\/locale/.test(file) ||
+    /packages\/refast\/dist\/module\/locale/.test(file)
+  );
+};
+
 const isRefast = (file: string) => {
   return (
-    !isRoutes(file) && (/node_modules\/@refastdev/.test(file) || /packages\/refast/.test(file))
+    !isRoutes(file) &&
+    !isLocale(file) &&
+    (/node_modules\/@refastdev/.test(file) || /packages\/refast/.test(file))
   );
 };
 
@@ -17,6 +26,9 @@ export const chunkSplitOptions: ChunkSplitOptions = {
   strategy: 'single-vendor',
   customChunk: (args) => {
     const { file, id, moduleId, root } = args;
+    if (isLocale(file)) {
+      return 'refast-locale';
+    }
     if (isRoutes(file)) {
       return 'refast-routes';
     }

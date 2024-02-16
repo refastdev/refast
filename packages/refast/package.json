@@ -14,6 +14,9 @@
       "encrypt": [
         "./dist/encrypt.d.ts"
       ],
+      "locale": [
+        "./dist/locale.d.ts"
+      ],
       "log": [
         "./dist/log.d.ts"
       ],
@@ -42,6 +45,12 @@
       "import": {
         "types": "./dist/encrypt.d.ts",
         "default": "./dist/module/encrypt/index.js"
+      }
+    },
+    "./locale": {
+      "import": {
+        "types": "./dist/locale.d.ts",
+        "default": "./dist/module/locale/index.js"
       }
     },
     "./log": {

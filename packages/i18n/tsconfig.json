@@ -1,7 +1,7 @@
 {
   "extends": "@refastdev/config-typescript/base.json",
   "exclude": ["node_modules/**/*"],
-  "include": ["src/**/*", "test/**/*", "module/**/*", "package.json"],
+  "include": ["src/**/*", "test/**/*", "package.json"],
   "compilerOptions": {
     "rootDir": ".",
     "jsx": "react-jsx",

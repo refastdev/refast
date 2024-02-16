@@ -2,10 +2,10 @@ import type {
   PageModalsModule,
   PagePreservedModule,
   PageRoutesModule,
-  PagesOption,
+  RoutesOption,
 } from '../../src/router';
 
-export const pages: PagesOption = {
+export const routes: RoutesOption = {
   pageRootPath: 'src/pages',
   pagePreservedFiles: import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}'),
   pageModalsFiles: import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}'),

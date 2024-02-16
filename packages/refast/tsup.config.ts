@@ -5,6 +5,7 @@ export default defineConfig([
     entry: [
       'src/index.ts',
       'module/encrypt/index.ts',
+      'module/locale/index.ts',
       'module/log/index.ts',
       'module/request/index.ts',
       'module/routes/index.ts',
@@ -16,6 +17,7 @@ export default defineConfig([
       entry: {
         index: './src/index.ts',
         encrypt: './module/encrypt/index.ts',
+        locale: './module/locale/index.ts',
         log: './module/log/index.ts',
         request: './module/request/index.ts',
         routes: './module/routes/index.ts',
@@ -24,6 +26,6 @@ export default defineConfig([
       },
     },
     external: ['react', 'react-router-dom'],
-    noExternal: ['@generouted/react-router'],
+    noExternal: [],
   },
 ]);
