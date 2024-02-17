@@ -9,7 +9,8 @@ export default defineConfig([
         index: './src/index.ts',
       },
     },
-    external: ['react', 'react-router-dom'],
+    skipNodeModulesBundle: true,
+    external: ['react', 'react-router-dom', 'fs', 'path'],
     noExternal: [],
   },
 ]);

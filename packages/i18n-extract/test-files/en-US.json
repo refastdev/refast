@@ -1,0 +1,20 @@
+{
+  "custom-key": "custom-key-value",
+  "custom-key2": "custom-key-value: {name}, {where}",
+  "T7JX2t": "default message",
+  "793acz": "Default message for basic[2]",
+  "1YNrB0": "Default message for basic(3)",
+  "custom-key3": "Default message for basic(4) with 中文 {name}, {where}}",
+  "custom-key4": "Default message for basic5 with 中文(5)",
+  "r+tUwA": "Default message for basic6 with \"123(中文)\"",
+  "XZb3kj": "Default message for newline1",
+  "+AoKYF": "Default message for newline2",
+  "dEs5l0": "Hello1, {name}. Welcome to {where}!",
+  "o0xBQQ": "你好2, {name}. 欢迎来到 {where}！",
+  "oWMTea": "Hello3, {name}. Welcome to {where}!",
+  "Z1iHjk": "你好4, {name}. 欢迎来到 {where}！",
+  "m1Gqxs": "Hello5, {name}. Welcome to {where}!test long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long",
+  "/r9YBs": "Expression support: ==,!=,>=,>,<=,<,&&,!,(),+,-,*,/,%",
+  "BH4lhc": "Default message for same_line1",
+  "tko/tL": "Default message for same_line2"
+}

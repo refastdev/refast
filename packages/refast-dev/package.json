@@ -7,7 +7,7 @@
   "types": "./dist/index.d.ts",
   "license": "MIT",
   "bin": {
-    "refast-dev": "bin/cli.js"
+    "refast-dev": "bin/cli.cjs"
   },
   "files": [
     "dist",
@@ -20,6 +20,10 @@
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
       }
     }
   },
@@ -45,8 +49,10 @@
   ],
   "dependencies": {
     "@preact/preset-vite": "^2.8.1",
+    "@refastdev/i18n-extract": "workspace:*",
     "@vitejs/plugin-legacy": "^5.3.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "commander": "^12.0.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "ts-deepmerge": "^7.0.0",
     "vite-plugin-chunk-split": "^0.5.0",
@@ -58,8 +64,8 @@
     "@refastdev/eslint-config": "workspace:*",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
-    "typescript": "^5.3.3",
     "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-dts": "^3.7.2",
     "vite-plugin-externalize-deps": "^0.8.0",
@@ -67,7 +73,7 @@
   },
   "scripts": {
     "build": "pnpm run lint && tsup --clean",
-    "lint": "npx eslint src bin test",
+    "lint": "npx eslint src test",
     "test": "vitest run index.test.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",

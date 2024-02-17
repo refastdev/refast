@@ -96,8 +96,8 @@ export const t = (defaultText?: string | undefined, args?: any, customKey?: stri
   return formatString(currentLocale.module[key], args);
 };
 
-export const tk = (customKey: string, args?: any) => {
-  return t(undefined, args, customKey);
+export const tk = (customKey: string, args?: any, defaultValue?: string) => {
+  return t(defaultValue, args, customKey);
 };
 
 export { codes };

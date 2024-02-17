@@ -9,7 +9,8 @@
     "build": "vite build",
     "dev": "vite --force",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "i18n-extract": "refast-dev --cmd i18n-extract --source-path ./src --output-path ./src/locales/en-US.json"
   },
   "dependencies": {
     "@refastdev/refast": "workspace:*",

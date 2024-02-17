@@ -19,7 +19,7 @@ export default function App() {
   const { i18n } = useText();
   const state = useStore((state) => state);
 
-  console.log(i18n.tk('custom-key'));
+  console.log(i18n.tk('custom-key', undefined, 'custom-value'));
   return (
     <div>
       App
@@ -30,7 +30,10 @@ export default function App() {
         <button onClick={() => state.setText('click')}>Click Change Input Text</button>
       </div>
       <div>
-        <div>Locale Text: {i18n.tk('custom-key')}</div>
+        <div>Locale Text: {i18n.t('test')}</div>
+        <div>Locale Text: {i18n.t('test2')}</div>
+        <div>Locale Text: {i18n.t('test3')}</div>
+        <div>Locale Text: {i18n.t('test3')}</div>
         <SelectorLocale />
       </div>
       <div>

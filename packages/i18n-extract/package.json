@@ -1,13 +1,17 @@
 {
-  "name": "@refastdev/i18n",
+  "name": "@refastdev/i18n-extract",
   "version": "0.0.1",
   "description": "refast",
   "type": "module",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
+  "bin": {
+    "i18n-extract": "bin/cli.cjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "exports": {
     ".": {
@@ -38,6 +42,7 @@
   ],
   "keywords": [
     "i18n",
+    "i18n-extract",
     "refast",
     "react",
     "fast",
@@ -48,12 +53,12 @@
     "nextjs"
   ],
   "dependencies": {
-    "js-sha256": "^0.11.0"
+    "commander": "^12.0.0",
+    "@refastdev/i18n": "workspace:*"
   },
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
-    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.11.19",
     "@types/react": "^18.2.48",
     "react": ">=18",
