@@ -6,13 +6,15 @@ interface TextProps {
   children?: string;
   className?: string;
   style?: React.CSSProperties;
+  args?: any;
+  customKey?: string;
 }
 
-export function Text({ children, className, style }: TextProps) {
+export const Text: React.FC<TextProps> = ({ children, className, style, args, customKey }) => {
   const { i18n } = useText();
   return (
     <span style={style} className={className}>
-      {i18n.t(children)}
+      {i18n.t(children, args, customKey)}
     </span>
   );
-}
+};

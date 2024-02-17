@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { I18nOptions } from '../core';
 import { I18nContext, contextData } from '../core/i18nContext';
@@ -14,12 +14,11 @@ export const I18n: React.FC<I18nProps> = ({ children, i18n }) => {
   const [initialize, setInitialize] = useState(false);
   useEffect(() => {
     const handleChangeLocale = (newLocale: string) => {
-      console.log(`change language: ${newLocale}`);
+      console.debug(`change language: ${newLocale}`);
       setKey(newLocale);
     };
-    contextData.i18n.localeEvent.addChangeEvent(handleChangeLocale);
 
-    console.log('effect');
+    contextData.i18n.localeEvent.addChangeEvent(handleChangeLocale);
 
     if (!initialize) {
       (async () => {
@@ -27,9 +26,7 @@ export const I18n: React.FC<I18nProps> = ({ children, i18n }) => {
         setInitialize(true);
       })();
     }
-
     return () => {
-      console.log('remove effect');
       contextData.i18n.localeEvent.removeChangeEvent(handleChangeLocale);
     };
   }, [initialize]);

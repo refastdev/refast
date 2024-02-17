@@ -56,7 +56,7 @@ export const loadLocale = async (locale: string) => {
     }
     currentLocale = {
       ...item,
-      module: localeModule,
+      module: localeModule.default || localeModule,
     };
     localeEvent.sendChangeEvent(locale);
   }
@@ -83,13 +83,21 @@ export const initLocale = async (options: I18nOptions) => {
   await loadLocale(initLocale);
 };
 
-export const t = (defaultText?: string | undefined, args?: any) => {
-  if (defaultText === undefined) return '';
-  const key = generateTextId(defaultText);
+export const t = (defaultText?: string | undefined, args?: any, customKey?: string) => {
+  const key: string | undefined = customKey
+    ? customKey
+    : defaultText
+      ? generateTextId(defaultText)
+      : undefined;
+  if (key === undefined) return '';
   if (currentLocale === undefined) {
     return formatString(defaultText, args);
   }
   return formatString(currentLocale.module[key], args);
+};
+
+export const tk = (customKey: string, args?: any) => {
+  return t(undefined, args, customKey);
 };
 
 export { codes };
