@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.6
+
+### Patch Changes
+
+- i18n-extract sort keys
+
 ## 0.0.5
 
 ### Patch Changes
