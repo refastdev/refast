@@ -1,5 +1,16 @@
 # @refastdev/refast
 
+## 0.0.5
+
+### Patch Changes
+
+- 64dd331: fix: i18n export
+- 86a624c: fix: i18n export
+- baa8fd4: fix i18n export
+- i18n-extract
+- Updated dependencies
+  - @refastdev/i18n@0.0.2
+
 ## 0.0.5-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @refastdev/i18n
 
+## 0.0.2
+
+### Patch Changes
+
+- i18n-extract
+
 ## 0.0.1
 
 ### Patch Changes
