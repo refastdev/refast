@@ -15,6 +15,13 @@ export default defineConfig({
           generatePath: 'custom-path/src/routes/index.ts',
         },
       },
+      generateLocales: {
+        open: true,
+        options: {
+          localesPath: 'custom-path/src/locales/langs',
+          generatePath: 'custom-path/src/locales/index.ts',
+        },
+      },
     }),
   ],
 });

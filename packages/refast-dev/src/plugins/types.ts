@@ -6,6 +6,7 @@ import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import viteCompression from 'vite-plugin-compression';
 import { viteVConsole } from 'vite-plugin-vconsole';
 
+import type { GenerateLocalesOptions } from './generateLocales';
 import type { GenerateRoutesOptions } from './generateRoutes';
 
 export type PreactPluginOptions = Parameters<typeof preact>[0];
@@ -23,6 +24,10 @@ interface RefastPluginOptions {
   generateRoutes: {
     open: boolean;
     options?: GenerateRoutesOptions;
+  };
+  generateLocales: {
+    open: boolean;
+    options?: GenerateLocalesOptions;
   };
   legacy: {
     open: boolean;

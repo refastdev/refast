@@ -8,6 +8,9 @@ export const defaultOptions: RefastPluginOptions = {
   generateRoutes: {
     open: false,
   },
+  generateLocales: {
+    open: false,
+  },
   legacy: {
     open: false,
     options: {
