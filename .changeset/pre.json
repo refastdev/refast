@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@refastdev/refast-example-custom-web": "0.0.0",
+    "@refastdev/refast-example-web": "0.0.0",
+    "@refastdev/eslint-config": "0.0.0",
+    "@refastdev/config-typescript": "0.0.0",
+    "@refastdev/i18n": "0.0.1",
+    "@refastdev/refast": "0.0.4",
+    "@refastdev/refast-dev": "0.0.4"
+  },
+  "changesets": [
+    "metal-colts-prove"
+  ]
+}
