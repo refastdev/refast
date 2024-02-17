@@ -128,7 +128,42 @@ const main = async ({ sourcePath, outputPath }: Options): Promise<ResultData[]> 
   const messages = scanFiles(sourcePath, ['.ts', '.tsx', '.js', '.jsx']);
   if (outputPath) {
     const data = mergeMessage(messages);
-    fs.writeFileSync(outputPath, `${JSON.stringify(data, undefined, 2)}\n`);
+    let oldData: any = undefined;
+    if (fs.existsSync(outputPath)) {
+      try {
+        oldData = JSON.parse(fs.readFileSync(outputPath, { encoding: 'utf8' }));
+      } catch (e) {
+        /* empty */
+      }
+    }
+    const newData: any = {};
+
+    // keep and update oldData
+    if (oldData) {
+      const oldKeys = Object.keys(oldData);
+      for (let i = 0; i < oldKeys.length; i++) {
+        const k = oldKeys[i];
+        if (k === undefined) continue;
+        if (Object.prototype.hasOwnProperty.call(data, k)) {
+          newData[k] = data[k];
+        } else {
+          newData[k] = oldData[k];
+        }
+      }
+    }
+
+    // sort newData
+    const keys = Object.keys(data).sort();
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      if (k === undefined) continue;
+      if (!Object.prototype.hasOwnProperty.call(newData, k)) {
+        console.log(k);
+        newData[k] = data[k];
+      }
+    }
+
+    fs.writeFileSync(outputPath, `${JSON.stringify(newData, undefined, 2)}\n`);
     console.log(`write file: ${outputPath}`);
   }
   return messages;
