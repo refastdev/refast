@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/refast",
-  "version": "0.0.5-alpha.0",
+  "version": "0.0.5-alpha.1",
   "description": "refast",
   "type": "module",
   "main": "dist/src/index.js",
@@ -111,6 +111,7 @@
   ],
   "dependencies": {
     "@generouted/react-router": "^1.18.2",
+    "@refastdev/i18n": "workspace:*",
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",
@@ -121,7 +122,6 @@
   "devDependencies": {
     "@refastdev/config-typescript": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
-    "@refastdev/i18n": "workspace:*",
     "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.2.48",
     "react": ">=18",

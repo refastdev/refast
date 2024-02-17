@@ -11,6 +11,7 @@
     "@refastdev/refast-dev": "0.0.4"
   },
   "changesets": [
+    "hot-crabs-judge",
     "metal-colts-prove"
   ]
 }
