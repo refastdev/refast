@@ -1,5 +1,6 @@
 import type { I18nOptions } from '../../src/i18n';
 
+const localesPath = 'src/locales';
 const locales = import.meta.glob<any>(['/src/locales/**/[\\w[-]*.{json,js}']);
 
 const getFileName = (filePath: string) => {
@@ -9,7 +10,7 @@ const getFileName = (filePath: string) => {
     .replace(/\.[^.]+$/, '');
 };
 
-export const i18n: I18nOptions = {
+const i18n: I18nOptions = {
   locales: Object.keys(locales)
     .filter((k) => locales[k] !== undefined)
     .map((k) => ({
@@ -19,3 +20,15 @@ export const i18n: I18nOptions = {
     })),
   defaultLocale: 'en-US',
 };
+
+// If navigator.language exists, it is set to defaultLocale
+const navigatorLanguage = navigator?.language;
+if (i18n.locales.findIndex((locale) => locale.key === navigatorLanguage) >= 0) {
+  i18n.defaultLocale = navigatorLanguage;
+}
+
+if (i18n.locales.length === 0) {
+  console.warn(`notfound locale files: ${localesPath}`);
+}
+
+export { i18n };

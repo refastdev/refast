@@ -35,6 +35,13 @@ export default function App() {
         <div>Locale Text test3: {i18n.t('test3-en-US', undefined, 'custom-key-test3')}</div>
         <div>Locale Text test4: {i18n.t('test4-{name}-en-US', { name: 'dynamic-name' })}</div>
         <SelectorLocale />
+        <button
+          onClick={() => {
+            i18n.revertLocale();
+          }}
+        >
+          revert locale setting
+        </button>
       </div>
       <div>
         <div>Content:</div>

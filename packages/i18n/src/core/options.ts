@@ -13,6 +13,7 @@ export interface I18nOptions {
     customSaveLoader?: {
       getData: (key: string) => string | undefined;
       setData: (key: string, value: string) => void;
+      deleteData: (key: string) => void;
     };
   };
 }

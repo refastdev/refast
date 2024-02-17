@@ -12,6 +12,7 @@ let localeList: Array<I18nLocaleType> = [];
 let currentLocale: I18nLocaleTypeLoaded | undefined = undefined;
 let defaultLocaleKey: string;
 let changeEvents: Array<(locale: string) => void> = [];
+let currentDeleteSaveLocale: (() => void) | undefined = undefined;
 
 export const localeEvent = {
   addChangeEvent: (event: (locale: string) => void) => {
@@ -70,10 +71,22 @@ export const existsLocale = (locale: string) => {
   return localeList.findIndex((item) => item.key === locale) >= 0;
 };
 
+export const revertLocale = async () => {
+  await loadLocale(defaultLocaleKey);
+  deleteSaveLocale();
+};
+
+export const deleteSaveLocale = () => {
+  if (currentDeleteSaveLocale != null) {
+    currentDeleteSaveLocale();
+  }
+};
+
 export const initLocale = async (options: I18nOptions) => {
   const mergeOptions = { ...defaultOptions, ...options };
   const { locales, defaultLocale, storage } = mergeOptions;
-  const { saveLocale, onChangeLocale } = initStorage(storage);
+  const { saveLocale, onChangeLocale, deleteSaveLocale } = initStorage(storage);
+  currentDeleteSaveLocale = deleteSaveLocale;
   if (onChangeLocale) {
     localeEvent.addChangeEvent(onChangeLocale);
   }

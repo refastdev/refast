@@ -24,6 +24,7 @@ const generate = (options: GenerateLocalesOptions) => {
   if (lowPath.endsWith('.ts')) {
     const localesStr = `import type { I18nOptions } from '@refastdev/refast';
 
+const localesPath = '${options.localesPath}';
 const locales = import.meta.glob<any>(['/${options.localesPath}/**/[\\\\w[-]*.{json,js}']);
 
 const getFileName = (filePath: string) => {
@@ -33,7 +34,7 @@ const getFileName = (filePath: string) => {
     .replace(/\\.[^.]+$/, '');
 };
 
-export const i18n: I18nOptions = {
+const i18n: I18nOptions = {
   locales: Object.keys(locales)
     .filter((k) => locales[k] !== undefined)
     .map((k) => ({
@@ -44,6 +45,17 @@ export const i18n: I18nOptions = {
   defaultLocale: 'en-US',
 };
 
+// If navigator.language exists, it is set to defaultLocale
+const navigatorLanguage = navigator?.language;
+if (i18n.locales.findIndex((locale) => locale.key === navigatorLanguage) >= 0) {
+  i18n.defaultLocale = navigatorLanguage;
+}
+
+if (i18n.locales.length === 0) {
+  console.warn(\`notfound locale files: \${localesPath}\`);
+}
+
+export { i18n };
 `;
     const tsPath = path.resolve(process.cwd(), options.generatePath);
     const dirname = path.dirname(tsPath);
@@ -52,7 +64,8 @@ export const i18n: I18nOptions = {
     }
     fs.writeFileSync(tsPath, localesStr, { encoding: 'utf8' });
   } else if (lowPath.endsWith('.js')) {
-    const localesStr = `var locales = import.meta.glob(["/${options.localesPath}/**/[\\\\w[-]*.{json,js}"]);
+    const localesStr = `var localesPath = "${options.localesPath}";
+var locales = import.meta.glob(["/${options.localesPath}/**/[\\\\w[-]*.{json,js}"]);
 var getFileName = (filePath) => {
   return filePath.split(/[\\\\/]/).pop().replace(/\\.[^.]+$/, "");
 };
@@ -64,6 +77,13 @@ var i18n = {
   })),
   defaultLocale: "en-US"
 };
+var navigatorLanguage = navigator?.language;
+if (i18n.locales.findIndex((locale) => locale.key === navigatorLanguage) >= 0) {
+  i18n.defaultLocale = navigatorLanguage;
+}
+if (i18n.locales.length === 0) {
+  console.warn(\`notfound locale files: \${localesPath}\`);
+}
 export {
   i18n
 };
