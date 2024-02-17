@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/i18n-extract",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "refast",
   "type": "module",
   "main": "dist/index.js",

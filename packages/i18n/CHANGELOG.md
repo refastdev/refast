@@ -1,5 +1,11 @@
 # @refastdev/i18n
 
+## 0.0.4
+
+### Patch Changes
+
+- auto default locale
+
 ## 0.0.3
 
 ### Patch Changes

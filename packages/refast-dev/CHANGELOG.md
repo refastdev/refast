@@ -1,5 +1,13 @@
 # @refastdev/refast-dev
 
+## 0.0.8
+
+### Patch Changes
+
+- auto default locale
+- Updated dependencies
+  - @refastdev/i18n-extract@0.0.5
+
 ## 0.0.7
 
 ### Patch Changes
