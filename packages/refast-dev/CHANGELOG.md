@@ -1,5 +1,13 @@
 # @refastdev/refast-dev
 
+## 0.0.7
+
+### Patch Changes
+
+- fix: remove debug log
+- Updated dependencies
+  - @refastdev/i18n-extract@0.0.4
+
 ## 0.0.6
 
 ### Patch Changes

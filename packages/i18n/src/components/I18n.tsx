@@ -14,7 +14,7 @@ export const I18n: React.FC<I18nProps> = ({ children, i18n }) => {
   const [initialize, setInitialize] = useState(false);
   useEffect(() => {
     const handleChangeLocale = (newLocale: string) => {
-      console.debug(`change language: ${newLocale}`);
+      // console.debug(`change language: ${newLocale}`);
       setKey(newLocale);
     };
 

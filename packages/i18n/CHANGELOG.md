@@ -1,5 +1,11 @@
 # @refastdev/i18n
 
+## 0.0.3
+
+### Patch Changes
+
+- fix: remove debug log
+
 ## 0.0.2
 
 ### Patch Changes
