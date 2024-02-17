@@ -1,5 +1,20 @@
 # @refastdev/refast
 
+## 0.0.4
+
+### Patch Changes
+
+- e157b21: state use zustand
+- 39d6729: locale
+- ce214d6: test
+- 29472f3: fix: routes chunk
+- ce214d6: fix: routes chunk
+- i18n update
+- 084e4a4: refast update
+- 16a2678: fix: routes chunk
+- 20f6f5c: routes refactoring
+- 1ac40d2: fix: chunk
+
 ## 0.0.4-alpha.8
 
 ### Patch Changes
