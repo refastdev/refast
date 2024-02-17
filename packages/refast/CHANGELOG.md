@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.5-alpha.2
+
+### Patch Changes
+
+- fix: i18n export
+
 ## 0.0.5-alpha.1
 
 ### Patch Changes
