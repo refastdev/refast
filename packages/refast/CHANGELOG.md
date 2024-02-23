@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.10
+
+### Patch Changes
+
+- fix: eslint-config.cjs
+
 ## 0.0.9
 
 ### Patch Changes
