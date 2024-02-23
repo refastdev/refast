@@ -152,10 +152,6 @@ importers:
   packages/config-typescript: {}
 
   packages/i18n:
-    dependencies:
-      js-sha256:
-        specifier: ^0.11.0
-        version: 0.11.0
     devDependencies:
       '@refastdev/config-typescript':
         specifier: workspace:*
@@ -172,6 +168,9 @@ importers:
       '@types/react':
         specifier: ^18.2.48
         version: 18.2.48
+      js-sha256:
+        specifier: ^0.11.0
+        version: 0.11.0
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -221,12 +220,6 @@ importers:
 
   packages/refast:
     dependencies:
-      '@generouted/react-router':
-        specifier: ^1.18.2
-        version: 1.18.2(react-router-dom@6.21.3)(react@18.2.0)(vite@5.0.12)
-      '@refastdev/i18n':
-        specifier: workspace:*
-        version: link:../i18n
       axios:
         specifier: ^1.6.7
         version: 1.6.7
@@ -242,19 +235,22 @@ importers:
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
-      use-force-update:
-        specifier: ^1.0.11
-        version: 1.0.11(react@18.2.0)
       zustand:
         specifier: ^4.5.0
         version: 4.5.0(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
+      '@generouted/react-router':
+        specifier: ^1.18.2
+        version: 1.18.2(react-router-dom@6.21.3)(react@18.2.0)(vite@5.0.12)
       '@refastdev/config-typescript':
         specifier: workspace:*
         version: link:../config-typescript
       '@refastdev/eslint-config':
         specifier: workspace:*
         version: link:../config-eslint
+      '@refastdev/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@types/crypto-js':
         specifier: ^4.2.2
         version: 4.2.2
@@ -267,6 +263,9 @@ importers:
       tsup:
         specifier: ^8.0.1
         version: 8.0.1(typescript@5.3.3)
+      use-force-update:
+        specifier: ^1.0.11
+        version: 1.0.11(react@18.2.0)
       vite:
         specifier: ^5.0.12
         version: 5.0.12(@types/node@20.11.10)(terser@5.27.0)
@@ -2173,7 +2172,7 @@ packages:
       react: 18.2.0
       react-router-dom: 6.21.3(react-dom@18.2.0)(react@18.2.0)
       vite: 5.0.12(@types/node@20.11.10)(terser@5.27.0)
-    dev: false
+    dev: true
 
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -2392,7 +2391,6 @@ packages:
   /@remix-run/router@1.14.2:
     resolution: {integrity: sha512-ACXpdMM9hmKZww21yEqWwiLws/UPLhNKvimN8RrYSqPSvB3ov7sLvAcfvaxePeLvccTQKGdkDIhLYApZVDFuKg==}
     engines: {node: '>=14.0.0'}
-    dev: false
 
   /@rollup/pluginutils@4.2.1:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
@@ -4293,7 +4291,7 @@ packages:
       vite: '>=3'
     dependencies:
       vite: 5.0.12(@types/node@20.11.10)(terser@5.27.0)
-    dev: false
+    dev: true
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -4839,7 +4837,7 @@ packages:
 
   /js-sha256@0.11.0:
     resolution: {integrity: sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==}
-    dev: false
+    dev: true
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -5667,7 +5665,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -5692,7 +5689,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-router: 6.21.3(react@18.2.0)
-    dev: false
 
   /react-router@6.21.3(react@18.2.0):
     resolution: {integrity: sha512-a0H638ZXULv1OdkmiK6s6itNhoy33ywxmUFT/xtSoVyf9VnC7n7+VT4LjVzdIHSaF5TIh9ylUgxMXksHTgGrKg==}
@@ -5702,7 +5698,6 @@ packages:
     dependencies:
       '@remix-run/router': 1.14.2
       react: 18.2.0
-    dev: false
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -5957,7 +5952,6 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
@@ -6694,7 +6688,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
+    dev: true
 
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}

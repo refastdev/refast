@@ -1,4 +1,4 @@
-import { Outlet, SelectorLocale, useText } from '@refastdev/refast';
+import { Outlet, SelectorLocale, Trans, useText } from '@refastdev/refast';
 
 export default function App() {
   const { i18n } = useText();
@@ -61,6 +61,13 @@ export default function App() {
       {name === 'Tony'
         ? i18n.t('Default message for same_line1')
         : i18n.t('Default message for same_line2')}
+      <Trans
+        text="test5-{name}-en-US"
+        args={{ name: 'dynamic-trans-name' }}
+        customKey="trans-custom-key"
+      />
+      <Trans text="test6-{name}-en-US" args={{ name: 'dynamic-trans-name' }} />
+      <Trans text="test7-{name}-en-US" args={{ name: 'dynamic-trans-name' }}></Trans>
     </div>
   );
 }

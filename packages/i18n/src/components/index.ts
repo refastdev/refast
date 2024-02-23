@@ -1,3 +1,3 @@
 export * from './I18n';
-export * from './Text';
+export * from './Trans';
 export * from './SelectorLocale';

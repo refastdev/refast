@@ -73,6 +73,7 @@
   "scripts": {
     "build": "pnpm run lint && tsup --clean",
     "lint": "npx eslint src",
+    "prepublishOnly": "pnpm run build",
     "test": "vitest run index.test.ts"
   }
 }

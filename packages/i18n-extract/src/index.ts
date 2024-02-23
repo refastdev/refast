@@ -14,6 +14,8 @@ export type ResultData = {
 
 const regex = /(?:i18n\s*\.\s*(t|tk))\s*\(\s*(['"])(.*?)\2\s*(?:,\s*([^]*?(?=\)|$)))?\s*\)/g;
 const regex2 = /(['"])((?:(?!\1)[\s\S])*?)\1(?=[,\r\n]*$)/g;
+const transRegex =
+  /<Trans\s+text="([^"]+)"(?:\s+args={{[^}]+}})?(?:\s+customKey="([^"]+)")?\s*\/?>/g;
 
 function processFile(filePath: string): ResultData[] {
   // utils.generateTextId()
@@ -36,12 +38,17 @@ function processFile(filePath: string): ResultData[] {
     }
     matches.push([methodName, firstParam, threeParam]);
   }
+  while ((match = transRegex.exec(content)) !== null) {
+    const text = match[1];
+    const customKey = match[2] || ''; // handle case where customKey is not present
+    matches.push(['Trans', text, customKey]);
+  }
   for (let i = 0; i < matches.length; i++) {
     const match = matches[i];
     if (match === undefined) continue;
     const type = match[0];
     if (type === undefined) continue;
-    if (type === 't') {
+    if (type === 't' || type === 'Trans') {
       const defaultValue = match[1];
       const customKey = match[2];
       if (defaultValue !== undefined && defaultValue !== '') {
@@ -158,7 +165,6 @@ const main = async ({ sourcePath, outputPath }: Options): Promise<ResultData[]> 
       const k = keys[i];
       if (k === undefined) continue;
       if (!Object.prototype.hasOwnProperty.call(newData, k)) {
-        console.log(k);
         newData[k] = data[k];
       }
     }

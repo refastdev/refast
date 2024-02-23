@@ -16,5 +16,8 @@
   "oWMTea": "Hello3, {name}. Welcome to {where}!",
   "r+tUwA": "Default message for basic6 with \"123(中文)\"",
   "tko/tL": "Default message for same_line2",
-  "/r9YBs": "Expression support: ==,!=,>=,>,<=,<,&&,!,(),+,-,*,/,%"
+  "/r9YBs": "Expression support: ==,!=,>=,>,<=,<,&&,!,(),+,-,*,/,%",
+  "9uw/VH": "test7-{name}-en-US",
+  "Lu2He7": "test6-{name}-en-US",
+  "trans-custom-key": "test5-{name}-en-US"
 }

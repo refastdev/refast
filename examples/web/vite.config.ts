@@ -10,4 +10,7 @@ export default defineConfig({
       appType: 'react',
     }),
   ],
+  build: {
+    minify: 'terser',
+  },
 });

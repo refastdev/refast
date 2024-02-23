@@ -25,7 +25,8 @@ export default defineConfig([
         storage: './module/storage/index.ts',
       },
     },
+    minify: 'terser',
     external: ['react', 'react-router-dom'],
-    noExternal: ['@refastdev/i18n'],
+    noExternal: ['@generouted/react-router', '@refastdev/i18n', 'use-force-update'],
   },
 ]);

@@ -9,7 +9,8 @@ export default defineConfig([
         index: './src/index.ts',
       },
     },
+    minify: 'terser',
     external: ['react', 'react-router-dom'],
-    noExternal: [],
+    noExternal: ['js-sha256'],
   },
 ]);

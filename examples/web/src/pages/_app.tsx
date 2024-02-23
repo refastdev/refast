@@ -1,4 +1,4 @@
-import { Outlet, SelectorLocale, useText } from '@refastdev/refast';
+import { Outlet, SelectorLocale, Trans, useText } from '@refastdev/refast';
 import { create } from '@refastdev/refast/state';
 
 interface StoreType {
@@ -34,6 +34,20 @@ export default function App() {
         <div>Locale Text test2: {i18n.t('test2-en-US')}</div>
         <div>Locale Text test3: {i18n.t('test3-en-US', undefined, 'custom-key-test3')}</div>
         <div>Locale Text test4: {i18n.t('test4-{name}-en-US', { name: 'dynamic-name' })}</div>
+        <div>
+          <Trans
+            text="test5-{name}-en-US1"
+            args={{ name: 'dynamic-trans-name' }}
+            customKey="trans-custom-key"
+          />
+        </div>
+        <div>
+          <Trans text="test6-{name}-en-US" args={{ name: 'dynamic-trans-name' }} />
+        </div>
+        <div>
+          <Trans text="test7-{name}-en-US" args={{ name: 'dynamic-trans-name' }}></Trans>
+        </div>
+
         <SelectorLocale />
         <button
           onClick={() => {

@@ -27,10 +27,10 @@ export const chunkSplitOptions: ChunkSplitOptions = {
   customChunk: (args) => {
     const { file, id, moduleId, root } = args;
     if (isLocale(file)) {
-      return 'refast-locale';
+      return 'refast-chunk';
     }
     if (isRoutes(file)) {
-      return 'refast-routes';
+      return 'refast-chunk';
     }
     if (isRefast(file)) {
       return 'refast';
