@@ -1,5 +1,13 @@
 # @refastdev/refast-dev
 
+## 0.0.9
+
+### Patch Changes
+
+- Trans component extract
+- Updated dependencies
+  - @refastdev/i18n-extract@0.0.6
+
 ## 0.0.8
 
 ### Patch Changes

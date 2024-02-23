@@ -1,5 +1,11 @@
 # @refastdev/i18n
 
+## 0.0.5
+
+### Patch Changes
+
+- Trans component extract
+
 ## 0.0.4
 
 ### Patch Changes
