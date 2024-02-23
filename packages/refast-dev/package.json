@@ -13,7 +13,7 @@
     "dist",
     "bin",
     "base-tsconfig.json",
-    "eslint-config.js"
+    "eslint-config.cjs"
   ],
   "exports": {
     ".": {
