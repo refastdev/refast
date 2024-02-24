@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.12
+
+### Patch Changes
+
+- hash router
+
 ## 0.0.11
 
 ### Patch Changes
