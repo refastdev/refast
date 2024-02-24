@@ -5,7 +5,13 @@ import {
 } from '@generouted/react-router/core';
 import React, { useEffect, useState } from 'react';
 import { Fragment, ReactNode, Suspense } from 'react';
-import { Outlet, RouterProvider, createBrowserRouter, useLocation } from 'react-router-dom';
+import {
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+  createHashRouter,
+  useLocation,
+} from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
 import { Redirect } from './components';
@@ -34,6 +40,7 @@ export interface RoutesOption {
   pageModalsFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
   pageRootPath: string;
+  routerType?: 'hash' | 'history';
 }
 
 export interface RoutesReturns {
@@ -51,12 +58,15 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   let pageRootPath: string;
   const pageAppName = '_app';
   const page404Name = '_404';
-
+  let routerType = 'history';
   if (pageOption) {
     pageRootPath = pageOption.pageRootPath;
     PRESERVED = pageOption.pagePreservedFiles;
     MODALS = pageOption.pageModalsFiles;
     ROUTES = pageOption.pageRoutesFiles;
+    if (pageOption.routerType) {
+      routerType = pageOption.routerType;
+    }
   } else {
     throw new Error('pages is undefined');
     // pageRootPath = 'src/pages';
@@ -147,7 +157,8 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const fallback = { path: '*', Component: page404?.default || Fragment };
 
   const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }];
-  const Routes = () => <RouterProvider router={createBrowserRouter(routes)} />;
+  const router = routerType === 'history' ? createBrowserRouter(routes) : createHashRouter(routes);
+  const Routes = () => <RouterProvider router={router} />;
 
   const Modals = () => {
     const Modal = modalRoutes[useLocation().state?.modal] || Fragment;
