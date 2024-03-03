@@ -24,7 +24,11 @@ export default function App() {
     <div>
       App
       <div>
-        <input type="text" value={state.text} onChange={(e) => state.setText(e.target.value)} />
+        <input
+          type="text"
+          value={state.text}
+          onChange={(e) => state.setText(e.currentTarget.value)}
+        />
       </div>
       <div>
         <button onClick={() => state.setText('click')}>Click Change Input Text</button>
