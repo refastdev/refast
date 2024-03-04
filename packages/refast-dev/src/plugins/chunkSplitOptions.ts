@@ -33,7 +33,9 @@ export const chunkSplitOptions: ChunkSplitOptions = {
   customChunk: (args) => {
     if (customChunkFunc) {
       const r = customChunkFunc(args);
-      return r;
+      if (r) {
+        return r;
+      }
     }
     const { file, id, moduleId, root } = args;
     if (isLocale(file)) {
