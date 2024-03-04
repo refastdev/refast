@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.15
+
+### Patch Changes
+
+- custom chunk func
+
 ## 0.0.14
 
 ### Patch Changes
