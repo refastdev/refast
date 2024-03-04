@@ -31,6 +31,10 @@ export const setCustomChunkFunc = (f: ChunkSplitOptionsCustomChunk | undefined =
 export const chunkSplitOptions: ChunkSplitOptions = {
   strategy: 'single-vendor',
   customChunk: (args) => {
+    if (customChunkFunc) {
+      const r = customChunkFunc(args);
+      return r;
+    }
     const { file, id, moduleId, root } = args;
     if (isLocale(file)) {
       return 'refast-chunk';
@@ -40,10 +44,6 @@ export const chunkSplitOptions: ChunkSplitOptions = {
     }
     if (isRefast(file)) {
       return 'refast';
-    }
-    if (customChunkFunc) {
-      const r = customChunkFunc(args);
-      return r;
     }
     return null;
   },
