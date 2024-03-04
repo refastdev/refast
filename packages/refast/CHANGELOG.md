@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.14
+
+### Patch Changes
+
+- SelectorLocale custom
+
 ## 0.0.13
 
 ### Patch Changes
