@@ -16,6 +16,12 @@ export type VisualizerOptions = Parameters<typeof visualizer>[0];
 export type LegacyOptions = Parameters<typeof legacy>[0];
 export type ViteCompressionOptions = Parameters<typeof viteCompression>[0];
 export type ChunkSplitOptions = Parameters<typeof chunkSplitPlugin>[0];
+export type ChunkSplitOptionsCustomChunk = (args: {
+  file: string;
+  id: string;
+  moduleId: string;
+  root: string;
+}) => string | undefined | null;
 
 interface RefastPluginOptions {
   appType: 'react' | 'preact';
@@ -48,6 +54,7 @@ interface RefastPluginOptions {
   chunkSplit: {
     open: boolean;
     options: ChunkSplitOptions;
+    customChunk?: ChunkSplitOptionsCustomChunk;
   };
   reactOptions: ReactOptions;
   preactOptions: PreactPluginOptions;

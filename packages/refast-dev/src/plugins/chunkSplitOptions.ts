@@ -1,4 +1,4 @@
-import { ChunkSplitOptions } from './types';
+import type { ChunkSplitOptions, ChunkSplitOptionsCustomChunk } from './types';
 
 const isRoutes = (file: string) => {
   return (
@@ -22,6 +22,12 @@ const isRefast = (file: string) => {
   );
 };
 
+let customChunkFunc: ChunkSplitOptionsCustomChunk | undefined = undefined;
+
+export const setCustomChunkFunc = (f: ChunkSplitOptionsCustomChunk | undefined = undefined) => {
+  customChunkFunc = f;
+};
+
 export const chunkSplitOptions: ChunkSplitOptions = {
   strategy: 'single-vendor',
   customChunk: (args) => {
@@ -34,6 +40,10 @@ export const chunkSplitOptions: ChunkSplitOptions = {
     }
     if (isRefast(file)) {
       return 'refast';
+    }
+    if (customChunkFunc) {
+      const r = customChunkFunc(args);
+      return r;
     }
     return null;
   },

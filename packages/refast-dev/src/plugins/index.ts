@@ -8,6 +8,7 @@ import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import viteCompression from 'vite-plugin-compression';
 import { viteVConsole } from 'vite-plugin-vconsole';
 
+import { setCustomChunkFunc } from './chunkSplitOptions';
 import { GenerateLocales } from './generateLocales';
 import { GenerateRoutes } from './generateRoutes';
 import { defaultOptions } from './options';
@@ -43,6 +44,7 @@ export const refastPlugin = (options?: Partial<RefastPluginOptions>): PluginOpti
     plugins.push(visualizer(resolvedOptions.visualizer.options));
   }
   if (isProduction && resolvedOptions.chunkSplit.open) {
+    setCustomChunkFunc(resolvedOptions.chunkSplit.customChunk);
     plugins.push(chunkSplitPlugin(resolvedOptions.chunkSplit.options));
   }
   return plugins;
