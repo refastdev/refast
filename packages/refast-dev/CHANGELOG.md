@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.17
+
+### Patch Changes
+
+- fix chunk bug
+
 ## 0.0.16
 
 ### Patch Changes
