@@ -1,5 +1,13 @@
 # @refastdev/refast-dev
 
+## 0.0.14
+
+### Patch Changes
+
+- SelectorLocale custom
+- Updated dependencies
+  - @refastdev/i18n-extract@0.0.7
+
 ## 0.0.13
 
 ### Patch Changes
