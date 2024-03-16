@@ -104,9 +104,9 @@ export const t = (defaultText?: string | undefined, args?: any, customKey?: stri
       : undefined;
   if (key === undefined) return '';
   if (currentLocale === undefined) {
-    return formatString(defaultText, args);
+    return formatString(defaultText, args) || defaultText || customKey || '';
   }
-  return formatString(currentLocale.module[key], args);
+  return formatString(currentLocale.module[key], args) || defaultText || customKey || '';
 };
 
 export const tk = (customKey: string, args?: any, defaultValue?: string) => {
