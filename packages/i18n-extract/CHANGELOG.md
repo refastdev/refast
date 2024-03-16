@@ -1,5 +1,13 @@
 # @refastdev/i18n
 
+## 0.0.8
+
+### Patch Changes
+
+- i18n.t return string
+- Updated dependencies
+  - @refastdev/i18n@0.0.7
+
 ## 0.0.7
 
 ### Patch Changes

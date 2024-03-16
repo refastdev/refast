@@ -1,5 +1,11 @@
 # @refastdev/i18n
 
+## 0.0.7
+
+### Patch Changes
+
+- i18n.t return string
+
 ## 0.0.6
 
 ### Patch Changes
