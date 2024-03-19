@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.19
+
+### Patch Changes
+
+- fix Redirect return undefined
+
 ## 0.0.18
 
 ### Patch Changes
