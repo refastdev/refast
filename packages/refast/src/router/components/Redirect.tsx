@@ -9,5 +9,5 @@ interface RedirectProps {
 export function Redirect(props: RedirectProps) {
   const { to } = useNavigate();
   useEffect(() => to(props.to), [props.to]);
-  return undefined;
+  return <></>;
 }
