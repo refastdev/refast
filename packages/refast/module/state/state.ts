@@ -25,10 +25,19 @@ export type InitializerType<
   $$storeMutators?: Mos;
 };
 
+export type StoreType<T> = {
+  useStore: <U>(selector: (state: T) => U) => U;
+  getState: StoreApi<T>['getState'];
+  setState: (recipe: (state: T) => void) => void;
+  setOriginalState: StoreApi<T>['setState'];
+  subscribe: StoreApi<T>['subscribe'];
+  getInitialState: StoreApi<T>['getInitialState'];
+};
+
 export const create = <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
   initializer: InitializerType<T, [], Mos>,
-) => {
-  const useOriginStore: UseBoundStore<Mutate<StoreApi<T>, Mos>> = _create(
+): StoreType<T> => {
+  const useOriginStore = _create<T>(
     (setState, getState, store) =>
       initializer(
         (recipe) => setState(produce((state) => recipe(state))),
@@ -42,11 +51,11 @@ export const create = <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
   const subscribe = useOriginStore.subscribe;
   const getInitialState = useOriginStore.getInitialState;
 
-  const useStore = <U>(selector: (state: ExtractState<Mutate<StoreApi<T>, Mos>>) => U): U => {
+  const useStore = <U>(selector: (state: T) => U): U => {
     return useOriginStore(selector);
   };
 
-  const setProduceState = (recipe: (state: ExtractState<Mutate<StoreApi<T>, Mos>>) => void) =>
+  const setProduceState = (recipe: (state: T) => void) =>
     setState(produce((state) => recipe(state)));
 
   return {
@@ -61,16 +70,16 @@ export const create = <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
 
 export const createStore = <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
   initializer: InitializerType<T, [], Mos>,
-) => {
-  const store: Mutate<StoreApi<T>, Mos> = _createStore((setState, getState, store) =>
+): StoreType<T> => {
+  const store = _createStore<T>((setState, getState, store) =>
     initializer((recipe) => setState(produce((state) => recipe(state))), setState, getState, store),
   );
   const { getState, setState, subscribe, getInitialState } = store;
 
-  const useStore = <U>(selector: (state: ExtractState<Mutate<StoreApi<T>, Mos>>) => U) =>
+  const useStore = <U>(selector: (state: T) => U) =>
     _useStore(store, selector);
 
-  const setProduceState = (recipe: (state: ExtractState<Mutate<StoreApi<T>, Mos>>) => void) =>
+  const setProduceState = (recipe: (state: T) => void) =>
     setState(produce((state) => recipe(state)));
 
   return {
