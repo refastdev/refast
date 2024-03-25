@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.21
+
+### Patch Changes
+
+- fix state type
+
 ## 0.0.20
 
 ### Patch Changes
