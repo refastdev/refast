@@ -3,8 +3,8 @@ import {
   generatePreservedRoutes,
   generateRegularRoutes,
 } from '@generouted/react-router/core';
-import React, { ExoticComponent, LazyExoticComponent, useEffect, useState } from 'react';
-import { Fragment, Suspense, lazy } from 'react';
+import React from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   Outlet,
   RouterProvider,
@@ -14,8 +14,10 @@ import {
 } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
+import { FallbackPageWrapper } from './components/FallbackPageWrapper';
+import { FallbackProvider } from './components/FallbackProvider';
+
 type Element = () => React.JSX.Element;
-// type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
 
 type Module = {
   default: Element;
@@ -97,27 +99,33 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     return {
       ...index,
       lazy: async () => {
-        let Element: Element | LazyExoticComponent<any> | ExoticComponent;
+        let Element: Element | React.LazyExoticComponent<any> | React.ExoticComponent;
         if (Loading) {
-          Element = lazy(module() as any);
+          Element = React.lazy(() => module() as any);
         } else {
           Element = (await module())?.default || Fragment;
         }
-        // const Element = (await module())?.default || Fragment;
         const Page = () => {
-          return Loading ? <Suspense fallback={<Loading />} children={<Element />} /> : <Element />;
+          return Loading ? (
+            <FallbackPageWrapper>
+              <Element />
+            </FallbackPageWrapper>
+          ) : (
+            <Element />
+          );
         };
         return {
           Component: Page,
           ErrorBoundary: (await module())?.Catch,
-          loader: async (args) => {
-            const Loader = (await module())?.Loader;
-            if (Loader) {
-              const result = await Loader(args);
-              return result;
-            }
-            return null;
-          },
+          loader: (await module())?.Loader,
+          // loader: async (args) => {
+          //   const Loader = (await module())?.Loader;
+          //   if (Loader) {
+          //     const result = await Loader(args);
+          //     return result;
+          //   }
+          //   return null;
+          // },
           action: (await module())?.Action,
         };
       },
@@ -148,7 +156,15 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     routerType === 'history'
       ? createBrowserRouter(routes, pageOption.routerOpts)
       : createHashRouter(routes, pageOption.routerOpts);
-  const Routes = () => <RouterProvider router={router} />;
+
+  const Routes = () =>
+    Loading ? (
+      <FallbackProvider loading={<Loading />}>
+        <RouterProvider router={router} />
+      </FallbackProvider>
+    ) : (
+      <RouterProvider router={router} />
+    );
 
   const Modals = () => {
     const Modal = modalRoutes[useLocation().state?.modal] || Fragment;
