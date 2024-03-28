@@ -153,7 +153,7 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     );
 
   const app = {
-    Component: pageApp?.default ? App : Outlet,
+    Component: pageApp?.default ? App : (Outlet as Element),
     ErrorBoundary: pageApp?.Catch,
     loader: pageApp?.Loader,
   };
