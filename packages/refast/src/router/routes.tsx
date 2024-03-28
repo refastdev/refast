@@ -35,12 +35,15 @@ export type PagePreservedModule = Module;
 export type PageModalsModule = Pick<Module, 'default'>;
 export type PageRoutesModule = Module;
 
+export type DOMRouterOpts = Parameters<typeof createBrowserRouter>[1];
+
 export interface RoutesOption {
   pagePreservedFiles: Record<string, any>;
   pageModalsFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
   pageRootPath: string;
   routerType?: 'hash' | 'history';
+  routerOpts?: DOMRouterOpts;
 }
 
 export interface RoutesReturns {
@@ -157,7 +160,10 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const fallback = { path: '*', Component: page404?.default || Fragment };
 
   const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }];
-  const router = routerType === 'history' ? createBrowserRouter(routes) : createHashRouter(routes);
+  const router =
+    routerType === 'history'
+      ? createBrowserRouter(routes, pageOption.routerOpts)
+      : createHashRouter(routes, pageOption.routerOpts);
   const Routes = () => <RouterProvider router={router} />;
 
   const Modals = () => {
