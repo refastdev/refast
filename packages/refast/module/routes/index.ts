@@ -7,10 +7,12 @@ import type {
 
 export const routes: RoutesOption = {
   pageRootPath: 'src/pages',
-  pagePreservedFiles: import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}'),
+  pagePreservedFiles: import.meta.glob<PagePreservedModule>(
+    '/src/pages/(_app|_404|_loading).{jsx,tsx}',
+  ),
   pageModalsFiles: import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}'),
   pageRoutesFiles: import.meta.glob<PageRoutesModule>([
     '/src/pages/**/[\\w[-]*.{jsx,tsx}',
-    '!**/(_app|_404).*',
+    '!**/(_app|_404|_loading).*',
   ]),
 };

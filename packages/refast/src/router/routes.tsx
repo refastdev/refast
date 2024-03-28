@@ -3,8 +3,8 @@ import {
   generatePreservedRoutes,
   generateRegularRoutes,
 } from '@generouted/react-router/core';
-import React, { useEffect, useState } from 'react';
-import { Fragment, ReactNode, Suspense } from 'react';
+import React, { ExoticComponent, LazyExoticComponent, useEffect, useState } from 'react';
+import { Fragment, Suspense, lazy } from 'react';
 import {
   Outlet,
   RouterProvider,
@@ -17,16 +17,13 @@ import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-d
 import { Redirect } from './components';
 
 type Element = () => React.JSX.Element;
-type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
+// type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
 
 type Module = {
   default: Element;
   Loader?: LoaderFunction;
   Action?: ActionFunction;
   Catch?: Element;
-  Pending?: Element;
-  Loading?: ContainerElement;
-  IsRedirect?: () => string | undefined;
 };
 
 type ModuleRouter = () => Promise<Partial<Module>>;
@@ -38,6 +35,9 @@ export type PageRoutesModule = Module;
 export type DOMRouterOpts = Parameters<typeof createBrowserRouter>[1];
 
 export interface RoutesOption {
+  page_AppName?: string;
+  page_404Name?: string;
+  page_LoadingName?: string;
   pagePreservedFiles: Record<string, any>;
   pageModalsFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
@@ -59,8 +59,9 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   let MODALS: Record<string, any>;
   let ROUTES: Record<string, any>;
   let pageRootPath: string;
-  const pageAppName = '_app';
-  const page404Name = '_404';
+  const pageAppName = pageOption.page_AppName || '_app';
+  const page404Name = pageOption.page_404Name || '_404';
+  const pageLoadingName = pageOption.page_LoadingName || '_loading';
   let routerType = 'history';
   if (pageOption) {
     pageRootPath = pageOption.pageRootPath;
@@ -72,13 +73,6 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     }
   } else {
     throw new Error('pages is undefined');
-    // pageRootPath = 'src/pages';
-    // PRESERVED = import.meta.glob<PagePreservedModule>('/src/pages/(_app|_404).{jsx,tsx}');
-    // MODALS = import.meta.glob<PageModalsModule>('/src/pages/**/[+]*.{jsx,tsx}');
-    // ROUTES = import.meta.glob<PageRoutesModule>([
-    //   '/src/pages/**/[\\w[-]*.{jsx,tsx}',
-    //   '!**/(_app|_404).*',
-    // ]);
   }
   const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED);
   const modalRoutes = generateModalRoutes<Element>(MODALS);
@@ -88,6 +82,14 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const _404: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
   )?.[page404Name];
+  const _loading: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
+    preservedRoutes as any
+  )?.[pageLoadingName];
+  let pageLoading: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
+  if (_loading) {
+    pageLoading = await _loading();
+  }
+  const Loading = pageLoading?.default;
 
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
@@ -97,26 +99,15 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     return {
       ...index,
       lazy: async () => {
-        const Element = (await module())?.default || Fragment;
-        const Pending = (await module())?.Pending;
-        const Loading = (await module())?.Loading;
-        const IsRedirect = (await module())?.IsRedirect;
-        let redirect: string | undefined = undefined;
-        if (IsRedirect) {
-          redirect = IsRedirect();
+        let Element: Element | LazyExoticComponent<any> | ExoticComponent;
+        if (Loading) {
+          Element = (await module())?.default || Fragment;
+        } else {
+          Element = lazy(module() as any);
         }
+        // const Element = (await module())?.default || Fragment;
         const Page = () => {
-          return redirect ? (
-            <Redirect to={redirect} />
-          ) : Loading ? (
-            <Loading>
-              {Pending ? <Suspense fallback={<Pending />} children={<Element />} /> : <Element />}
-            </Loading>
-          ) : Pending ? (
-            <Suspense fallback={<Pending />} children={<Element />} />
-          ) : (
-            <Element />
-          );
+          return Loading ? <Suspense fallback={<Loading />} children={<Element />} /> : <Element />;
         };
         return {
           Component: Page,
@@ -145,12 +136,7 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   }
 
   const AppElement = pageApp?.default || Fragment;
-  const App = () =>
-    pageApp?.Pending ? (
-      <Suspense fallback={<pageApp.Pending />} children={<AppElement />} />
-    ) : (
-      <AppElement />
-    );
+  const App = () => <AppElement />;
 
   const app = {
     Component: pageApp?.default ? App : (Outlet as Element),

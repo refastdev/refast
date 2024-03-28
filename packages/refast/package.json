@@ -117,7 +117,7 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
-    "@generouted/react-router": "^1.18.2",
+    "@generouted/react-router": "^1.18.5",
     "@refastdev/config-typescript": "workspace:*",
     "@refastdev/eslint-config": "workspace:*",
     "@refastdev/i18n": "workspace:*",
