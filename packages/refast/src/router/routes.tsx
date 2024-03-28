@@ -14,8 +14,6 @@ import {
 } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
-import { Redirect } from './components';
-
 type Element = () => React.JSX.Element;
 // type ContainerElement = ({ children }: { children: ReactNode }) => React.JSX.Element;
 
@@ -101,9 +99,9 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
       lazy: async () => {
         let Element: Element | LazyExoticComponent<any> | ExoticComponent;
         if (Loading) {
-          Element = (await module())?.default || Fragment;
-        } else {
           Element = lazy(module() as any);
+        } else {
+          Element = (await module())?.default || Fragment;
         }
         // const Element = (await module())?.default || Fragment;
         const Page = () => {
