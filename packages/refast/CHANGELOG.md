@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.23
+
+### Patch Changes
+
+- fix i18n error
+
 ## 0.0.22
 
 ### Patch Changes
