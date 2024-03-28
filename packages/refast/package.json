@@ -1,6 +1,6 @@
 {
   "name": "@refastdev/refast",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "refast",
   "type": "module",
   "main": "dist/src/index.js",

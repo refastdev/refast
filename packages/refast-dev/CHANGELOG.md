@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.25
+
+### Patch Changes
+
+- fix loading bug
+
 ## 0.0.24
 
 ### Patch Changes
