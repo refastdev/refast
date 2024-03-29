@@ -1,8 +1,13 @@
-import { useLoaderData } from 'react-router-dom';
-import type { LoaderFunction } from 'react-router-dom';
+import { useAsyncValue, useLoaderData } from 'react-router-dom';
 
-export type LoaderFn = LoaderFunction;
+export function useLoader<T>(): T | undefined {
+  const data = useLoaderData();
+  if (data) {
+    return (data as any).data;
+  }
+  return undefined;
+}
 
-export function useLoader<T>(): T {
-  return useLoaderData() as T;
+export function useAsyncLoader<T>(): T | undefined {
+  return useAsyncValue() as T;
 }

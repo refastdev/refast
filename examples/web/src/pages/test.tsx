@@ -1,4 +1,4 @@
-import { Link, useLoader } from '@refastdev/refast';
+import { Link, useAsyncLoader } from '@refastdev/refast';
 
 export const Loader = async () => {
   await new Promise((r) => setTimeout(r, 1000));
@@ -8,7 +8,7 @@ export const Loader = async () => {
 };
 
 export default function Test() {
-  const data = useLoader<{ data: string }>();
+  const data = useAsyncLoader<{ data: string }>();
   console.log(data);
   return (
     <div>

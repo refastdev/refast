@@ -3,19 +3,19 @@ import {
   generatePreservedRoutes,
   generateRegularRoutes,
 } from '@generouted/react-router/core';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Fragment, useEffect, useState } from 'react';
 import {
+  Await,
   Outlet,
   RouterProvider,
   createBrowserRouter,
   createHashRouter,
+  defer,
+  useLoaderData,
   useLocation,
 } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
-
-import { FallbackPageWrapper } from './components/FallbackPageWrapper';
-import { FallbackProvider } from './components/FallbackProvider';
 
 type Element = () => React.JSX.Element;
 
@@ -23,7 +23,9 @@ type Module = {
   default: Element;
   Loader?: LoaderFunction;
   Action?: ActionFunction;
+  Loading?: Element;
   Catch?: Element;
+  errorElement?: React.ReactNode | null;
 };
 
 type ModuleRouter = () => Promise<Partial<Module>>;
@@ -51,6 +53,41 @@ export interface RoutesReturns {
   Routes: Element;
   Modals: Element;
 }
+
+const getLoader = (m: Partial<Module> | undefined) => {
+  return (args: any) => {
+    if (m && m.Loader) {
+      return defer({
+        data: m.Loader(args),
+      });
+    }
+    return null;
+  };
+};
+
+const getComponent = (
+  m: Partial<Module> | undefined,
+  Element: Element | any,
+  Loading: Element | undefined,
+) => {
+  return () => {
+    if (m && m.Loader) {
+      const { data } = useLoaderData() as any;
+      return (
+        <Suspense fallback={m.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined}>
+          <Await resolve={data}>
+            <Element />
+          </Await>
+        </Suspense>
+      );
+    }
+    return (
+      <Suspense fallback={m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined}>
+        <Element />
+      </Suspense>
+    );
+  };
+};
 
 const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const pageOption = options || {};
@@ -92,41 +129,20 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const Loading = pageLoading?.default;
 
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
-    const index =
+    const index: { index: boolean } =
       /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`)
         ? { index: true }
-        : {};
+        : { index: false };
     return {
       ...index,
       lazy: async () => {
-        let Element: Element | React.LazyExoticComponent<any> | React.ExoticComponent;
-        if (Loading) {
-          Element = React.lazy(() => module() as any);
-        } else {
-          Element = (await module())?.default || Fragment;
-        }
-        const Page = () => {
-          return Loading ? (
-            <FallbackPageWrapper>
-              <Element />
-            </FallbackPageWrapper>
-          ) : (
-            <Element />
-          );
-        };
+        const m = await module();
+        const Element = m.default || Fragment;
         return {
-          Component: Page,
-          ErrorBoundary: (await module())?.Catch,
-          loader: (await module())?.Loader,
-          // loader: async (args) => {
-          //   const Loader = (await module())?.Loader;
-          //   if (Loader) {
-          //     const result = await Loader(args);
-          //     return result;
-          //   }
-          //   return null;
-          // },
-          action: (await module())?.Action,
+          Component: getComponent(m, Element, Loading),
+          ErrorBoundary: m?.Catch,
+          loader: getLoader(m),
+          action: m?.Action,
         };
       },
     };
@@ -134,37 +150,32 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
 
   let pageApp: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
   let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
-  if (_app) {
-    pageApp = await _app();
-  }
+
   if (_404) {
     page404 = await _404();
   }
 
-  const AppElement = pageApp?.default || Fragment;
-  const App = () => <AppElement />;
-
-  const app = {
-    Component: pageApp?.default ? App : (Outlet as Element),
-    ErrorBoundary: pageApp?.Catch,
-    loader: pageApp?.Loader,
+  const app = async () => {
+    if (_app) {
+      pageApp = await _app();
+    }
+    const AppElement = pageApp?.default || (Outlet as Element);
+    const App = () => <AppElement />;
+    return {
+      Component: getComponent(pageApp, App, Loading),
+      ErrorBoundary: pageApp?.Catch,
+      loader: getLoader(pageApp),
+    };
   };
   const fallback = { path: '*', Component: page404?.default || Fragment };
 
-  const routes: RouteObject[] = [{ ...app, children: [...regularRoutes, fallback] }];
+  const routes: RouteObject[] = [{ lazy: app, children: [...regularRoutes, fallback] }];
   const router =
     routerType === 'history'
       ? createBrowserRouter(routes, pageOption.routerOpts)
       : createHashRouter(routes, pageOption.routerOpts);
 
-  const Routes = () =>
-    Loading ? (
-      <FallbackProvider loading={<Loading />}>
-        <RouterProvider router={router} />
-      </FallbackProvider>
-    ) : (
-      <RouterProvider router={router} />
-    );
+  const Routes = () => <RouterProvider router={router} />;
 
   const Modals = () => {
     const Modal = modalRoutes[useLocation().state?.modal] || Fragment;

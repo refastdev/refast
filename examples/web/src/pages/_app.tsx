@@ -15,6 +15,13 @@ const { useStore } = create<StoreType>((set, setState) => ({
   },
 }));
 
+export const Loader = async () => {
+  await new Promise((r) => setTimeout(r, 1000));
+  return {
+    data: 'app',
+  };
+};
+
 export default function App() {
   const { i18n } = useText();
   const state = useStore((state) => state);
