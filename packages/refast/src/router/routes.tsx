@@ -1,9 +1,8 @@
 import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
-import React, { LazyExoticComponent, Suspense, lazy } from 'react';
-import { Fragment, useEffect, useState } from 'react';
+import React from 'react';
+import { Fragment, LazyExoticComponent, Suspense, lazy, memo, useEffect, useState } from 'react';
 import {
   Await,
-  Outlet,
   RouterProvider,
   createBrowserRouter,
   createHashRouter,
@@ -103,78 +102,47 @@ const getComponent = (
   GlobalLoading: Element | undefined,
   auth?: AuthOption,
 ) => {
-  return (props: any) => {
+  const LazyComponent = (props: any) => {
     if (module) {
-      const [ComponentContainer, setComponentContainer] = useState<LazyExoticComponent<any> | null>(
-        null,
-      );
       const fallback = GlobalLoading ? <GlobalLoading /> : undefined;
-      useEffect(() => {
-        setComponentContainer(
-          lazy(async () => {
-            const m = await module();
-            let Component: React.ComponentType<any> | undefined = undefined;
-            if (m && m.Loader) {
-              Component = (props) => {
-                const { data } = useLoaderData() as any;
-                const Element = m.default || Fragment;
-                return (
-                  <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-                    <Suspense fallback={fallback}>
-                      <Await resolve={data}>
-                        <Element {...props} />
-                      </Await>
-                    </Suspense>
-                  </ProtectedRoute>
-                );
-              };
-            } else {
-              Component = (props) => {
-                const Element = m.default || Fragment;
-                return (
-                  <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-                    <Suspense fallback={fallback}>
-                      <Element {...props} />
-                    </Suspense>
-                  </ProtectedRoute>
-                );
-              };
-            }
-            return {
-              default: Component || Fragment,
-            };
-          }),
-        );
-      }, []);
-
+      const ComponentContainer = lazy(async () => {
+        const m = await module();
+        let Component: React.ComponentType<any> | undefined = undefined;
+        if (m && m.Loader) {
+          Component = (props) => {
+            const { data } = useLoaderData() as any;
+            const Element = m.default || Fragment;
+            return (
+              <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+                <Await resolve={data}>
+                  <Element {...props} />
+                </Await>
+              </ProtectedRoute>
+            );
+          };
+        } else {
+          Component = (props) => {
+            const Element = m.default || Fragment;
+            return (
+              <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+                <Element {...props} />
+              </ProtectedRoute>
+            );
+          };
+        }
+        return {
+          default: Component || Fragment,
+        };
+      });
       return (
         <Suspense fallback={fallback}>
           {ComponentContainer && <ComponentContainer {...props} />}
         </Suspense>
       );
-
-      // if (m && m.Loader) {
-      //   const { data } = useLoaderData() as any;
-      //   return (
-      //     <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
-      //       <Suspense fallback={fallback}>
-      //         <Await resolve={data}>
-      //           <Element />
-      //         </Await>
-      //       </Suspense>
-      //     </ProtectedRoute>
-      //   );
-      // }
-      // return (
-      //   <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
-      //     <Suspense fallback={fallback}>
-      //       <Element />
-      //     </Suspense>
-      //   </ProtectedRoute>
-      // );
     }
     return undefined;
   };
+  return LazyComponent;
 };
 
 const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
