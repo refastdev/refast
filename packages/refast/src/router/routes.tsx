@@ -1,6 +1,6 @@
 import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
 import React from 'react';
-import { Fragment, LazyExoticComponent, Suspense, lazy, memo, useEffect, useState } from 'react';
+import { Fragment, Suspense, lazy } from 'react';
 import {
   Await,
   RouterProvider,
@@ -39,16 +39,20 @@ export interface AuthOption {
 }
 
 export interface RoutesOption {
-  page_AppName?: string;
-  page_404Name?: string;
-  page_LoadingName?: string;
+  pageName_App?: string;
+  pageName_404?: string;
+
   pagePreservedFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
   pageRootPath: string;
+
   routerType?: 'hash' | 'history';
   routerOpts?: DOMRouterOpts;
+
   keepCurrentPageLoading?: boolean;
   auth?: AuthOption;
+
+  loading?: Element;
 }
 
 export interface RoutesReturns {
@@ -82,7 +86,7 @@ const getAction = (module: ModuleRouter | undefined) => {
   };
 };
 
-const getErrorBoundary = (module: ModuleRouter | undefined) => {
+const useErrorBoundary = (module: ModuleRouter | undefined) => {
   if (module) {
     return () => {
       const ErrorBoundary = lazy(async () => ({
@@ -97,7 +101,7 @@ const getErrorBoundary = (module: ModuleRouter | undefined) => {
   }
 };
 
-const getComponent = (
+const useComponent = (
   module: ModuleRouter | undefined,
   GlobalLoading: Element | undefined,
   auth?: AuthOption,
@@ -145,15 +149,14 @@ const getComponent = (
   return LazyComponent;
 };
 
-const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
+export const useRoutes = (options: RoutesOption) => {
   const pageOption = options || {};
 
   let PRESERVED: Record<string, any>;
   let ROUTES: Record<string, any>;
   let pageRootPath: string;
-  const pageAppName = pageOption.page_AppName || '_app';
-  const page404Name = pageOption.page_404Name || '_404';
-  const pageLoadingName = pageOption.page_LoadingName || '_loading';
+  const pageAppName = pageOption.pageName_App || '_app';
+  const page404Name = pageOption.pageName_404 || '_404';
   let routerType = 'history';
   if (pageOption) {
     pageRootPath = pageOption.pageRootPath;
@@ -172,36 +175,28 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const _404: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
   )?.[page404Name];
-  const _loading: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
-    preservedRoutes as any
-  )?.[pageLoadingName];
 
-  const Loading = _loading && (await _loading())?.default;
+  const Loading = options.loading;
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
       /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`) ? true : false;
     return {
       index,
-      Component: getComponent(module, Loading, options.auth),
-      ErrorBoundary: getErrorBoundary(module),
+      Component: useComponent(module, Loading, options.auth),
+      ErrorBoundary: useErrorBoundary(module),
       loader: getLoader(module),
       action: getAction(module),
     };
   });
 
-  let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
-  if (_404) {
-    page404 = await _404();
-  }
-
   const App: RouteObject = {
     loader: getLoader(_app),
-    Component: getComponent(_app, Loading, options.auth),
-    ErrorBoundary: getErrorBoundary(_app),
+    Component: useComponent(_app, Loading, options.auth),
+    ErrorBoundary: useErrorBoundary(_app),
     action: getAction(_app),
   };
 
-  const fallback = { path: '*', Component: page404?.default || Fragment };
+  const fallback: RouteObject = { path: '*', Component: useComponent(_404, Loading, options.auth) };
 
   const routes: RouteObject[] = [{ ...App, children: [...regularRoutes, fallback] }];
   const routerOpts: DOMRouterOpts = {
@@ -219,19 +214,5 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
       </AuthProvider>
     );
   };
-  return {
-    routes,
-    Routes,
-  };
-};
-
-export const useRoutes = (options: RoutesOption) => {
-  const [routes, setRoutes] = useState<RoutesReturns>();
-  useEffect(() => {
-    (async () => {
-      const routes = await getRoutes(options);
-      setRoutes(routes);
-    })();
-  }, []);
-  return routes;
+  return Routes;
 };

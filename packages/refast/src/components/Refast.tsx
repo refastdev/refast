@@ -15,8 +15,8 @@ export interface RefastProps {
 export const Refast: React.FC<RefastProps> = ({ children, className, i18n, routes, style }) => {
   let childrenElement: React.JSX.Element | undefined;
   if (routes) {
-    const routesData = useRoutes(routes || {});
-    const router = routesData ? <routesData.Routes /> : children;
+    const Routes = useRoutes(routes || {});
+    const router = <Routes />;
     if (i18n) {
       childrenElement = <I18n i18n={i18n}>{router}</I18n>;
     } else {

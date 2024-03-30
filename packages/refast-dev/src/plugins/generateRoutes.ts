@@ -26,12 +26,10 @@ const generate = (options: GenerateRoutesOptions) => {
 
 export const routes: RoutesOption = {
   pageRootPath: '${options.pageRoot}',
-  pagePreservedFiles: import.meta.glob<PagePreservedModule>(
-    '/${options.pageRoot}/(_app|_404|_loading).{jsx,tsx}',
-  ),
+  pagePreservedFiles: import.meta.glob<PagePreservedModule>('/${options.pageRoot}/(_app|_404).{jsx,tsx}'),
   pageRoutesFiles: import.meta.glob<PageRoutesModule>([
     '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
-    '!**/(_app|_404|_loading).*',
+    '!**/(_app|_404).*',
   ]),
 };
 `;
@@ -44,10 +42,10 @@ export const routes: RoutesOption = {
   } else if (lowPath.endsWith('.js')) {
     const routesStr = `export const pages = {
   pageRootPath: '${options.pageRoot}',
-  pagePreservedFiles: import.meta.glob('/${options.pageRoot}/(_app|_404|_loading).{jsx,tsx}'),
+  pagePreservedFiles: import.meta.glob('/${options.pageRoot}/(_app|_404).{jsx,tsx}'),
   pageRoutesFiles: import.meta.glob([
     '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
-    '!**/(_app|_404|_loading).*',
+    '!**/(_app|_404).*',
   ]),
 };
 `;
