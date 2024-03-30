@@ -1,8 +1,4 @@
-import {
-  generateModalRoutes,
-  generatePreservedRoutes,
-  generateRegularRoutes,
-} from '@generouted/react-router/core';
+import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
 import React, { Suspense } from 'react';
 import { Fragment, useEffect, useState } from 'react';
 import {
@@ -13,7 +9,6 @@ import {
   createHashRouter,
   defer,
   useLoaderData,
-  useLocation,
 } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
@@ -31,7 +26,6 @@ type Module = {
 type ModuleRouter = () => Promise<Partial<Module>>;
 
 export type PagePreservedModule = Module;
-export type PageModalsModule = Pick<Module, 'default'>;
 export type PageRoutesModule = Module;
 
 export type DOMRouterOpts = Parameters<typeof createBrowserRouter>[1];
@@ -41,7 +35,6 @@ export interface RoutesOption {
   page_404Name?: string;
   page_LoadingName?: string;
   pagePreservedFiles: Record<string, any>;
-  pageModalsFiles: Record<string, any>;
   pageRoutesFiles: Record<string, any>;
   pageRootPath: string;
   routerType?: 'hash' | 'history';
@@ -52,7 +45,6 @@ export interface RoutesOption {
 export interface RoutesReturns {
   routes: RouteObject[];
   Routes: Element;
-  Modals: Element;
 }
 
 const getLoader = (m: Partial<Module> | undefined) => {
@@ -72,22 +64,11 @@ const getComponent = (
   Loading: Element | undefined,
 ) => {
   return () => {
-    const initialFallback = m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined;
-    const fallback = React.useRef(() => initialFallback);
-
-    const updateFallback = async (): Promise<void> => {
-      const result = await Element._result;
-      if (result)
-        fallback.current = typeof result === 'function' ? result : (result as any).default;
-    };
-
-    React.useEffect(() => {
-      updateFallback();
-    }, [Element]);
+    const fallback = m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined;
     if (m && m.Loader) {
       const { data } = useLoaderData() as any;
       return (
-        <Suspense fallback={<fallback.current />}>
+        <Suspense fallback={fallback}>
           <Await resolve={data}>
             <Element />
           </Await>
@@ -95,7 +76,7 @@ const getComponent = (
       );
     }
     return (
-      <Suspense fallback={<fallback.current />}>
+      <Suspense fallback={fallback}>
         <Element />
       </Suspense>
     );
@@ -106,7 +87,6 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const pageOption = options || {};
 
   let PRESERVED: Record<string, any>;
-  let MODALS: Record<string, any>;
   let ROUTES: Record<string, any>;
   let pageRootPath: string;
   const pageAppName = pageOption.page_AppName || '_app';
@@ -116,7 +96,6 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   if (pageOption) {
     pageRootPath = pageOption.pageRootPath;
     PRESERVED = pageOption.pagePreservedFiles;
-    MODALS = pageOption.pageModalsFiles;
     ROUTES = pageOption.pageRoutesFiles;
     if (pageOption.routerType) {
       routerType = pageOption.routerType;
@@ -125,7 +104,6 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     throw new Error('pages is undefined');
   }
   const preservedRoutes = generatePreservedRoutes<Omit<PagePreservedModule, 'Action'>>(PRESERVED);
-  const modalRoutes = generateModalRoutes<Element>(MODALS);
   const _app: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
   )?.[pageAppName];
@@ -183,31 +161,35 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const fallback = { path: '*', Component: page404?.default || Fragment };
 
   const routes: RouteObject[] = [{ lazy: app, children: [...regularRoutes, fallback] }];
+  const routerOpts: DOMRouterOpts = {
+    ...pageOption.routerOpts,
+  };
   const router =
     routerType === 'history'
-      ? createBrowserRouter(routes, pageOption.routerOpts)
-      : createHashRouter(routes, pageOption.routerOpts);
-
-  const Routes = () => <RouterProvider router={router} />;
-
-  const Modals = () => {
-    const Modal = modalRoutes[useLocation().state?.modal] || Fragment;
-    return <Modal />;
+      ? createBrowserRouter(routes, routerOpts)
+      : createHashRouter(routes, routerOpts);
+  const Routes = () => {
+    return (
+      <RouterProvider
+        router={router}
+        fallbackElement={Loading && <Loading />}
+        future={{ v7_startTransition: true }}
+      />
+    );
   };
   return {
     routes,
     Routes,
-    Modals,
   };
 };
 
 export const useRoutes = (options: RoutesOption) => {
-  const [data, setData] = useState<RoutesReturns>();
+  const [routes, setRoutes] = useState<RoutesReturns>();
   useEffect(() => {
     (async () => {
       const routes = await getRoutes(options);
-      setData(routes);
+      setRoutes(routes);
     })();
   }, []);
-  return data;
+  return routes;
 };

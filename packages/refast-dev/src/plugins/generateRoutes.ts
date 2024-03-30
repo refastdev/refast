@@ -22,19 +22,13 @@ const defaultOptions: GenerateRoutesOptions = {
 const generate = (options: GenerateRoutesOptions) => {
   const lowPath = options.generatePath.trim().toLocaleLowerCase();
   if (lowPath.endsWith('.ts')) {
-    const routesStr = `import type {
-  PageModalsModule,
-  PagePreservedModule,
-  PageRoutesModule,
-  RoutesOption,
-} from '@refastdev/refast';
+    const routesStr = `import type { PagePreservedModule, PageRoutesModule, RoutesOption } from '@refastdev/refast';
 
 export const routes: RoutesOption = {
   pageRootPath: '${options.pageRoot}',
   pagePreservedFiles: import.meta.glob<PagePreservedModule>(
     '/${options.pageRoot}/(_app|_404|_loading).{jsx,tsx}',
   ),
-  pageModalsFiles: import.meta.glob<PageModalsModule>('/${options.pageRoot}/**/[+]*.{jsx,tsx}'),
   pageRoutesFiles: import.meta.glob<PageRoutesModule>([
     '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
     '!**/(_app|_404|_loading).*',
@@ -51,7 +45,6 @@ export const routes: RoutesOption = {
     const routesStr = `export const pages = {
   pageRootPath: '${options.pageRoot}',
   pagePreservedFiles: import.meta.glob('/${options.pageRoot}/(_app|_404|_loading).{jsx,tsx}'),
-  pageModalsFiles: import.meta.glob('/${options.pageRoot}/**/[+]*.{jsx,tsx}'),
   pageRoutesFiles: import.meta.glob([
     '/${options.pageRoot}/**/[\\\\w[-]*.{jsx,tsx}',
     '!**/(_app|_404|_loading).*',
@@ -61,7 +54,6 @@ export const routes: RoutesOption = {
     const routesTypeStr = `declare const routes: {
     pageRootPath: string;
     pagePreservedFiles: Record<string, any>;
-    pageModalsFiles: Record<string, any>;
     pageRoutesFiles: Record<string, any>;
 };
 
