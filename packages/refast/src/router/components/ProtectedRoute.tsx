@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { useAuth } from '../provider/AuthProvider';
+import { useAuth } from '../hooks';
 import { Navigate } from './Navigate';
 
 interface ProtectedRouteProps {

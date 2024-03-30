@@ -13,7 +13,7 @@ import {
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
-import AuthProvider, { useAuth } from './provider/AuthProvider';
+import AuthProvider from './provider/AuthProvider';
 
 type Element = () => React.JSX.Element;
 

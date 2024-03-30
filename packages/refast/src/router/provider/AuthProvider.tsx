@@ -11,7 +11,7 @@ export interface AuthContextValue {
   setToken: (token: any) => void;
 }
 
-const AuthContext = createContext<AuthContextValue>({
+export const AuthContext = createContext<AuthContextValue>({
   setToken(token) {},
 });
 
@@ -40,10 +40,6 @@ const AuthProvider = ({ children, getToken, setToken }: AuthContextProps) => {
 
   // Provide the authentication context to the children components
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };
 
 export default AuthProvider;
