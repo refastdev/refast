@@ -46,6 +46,7 @@ export interface RoutesOption {
   pageRootPath: string;
   routerType?: 'hash' | 'history';
   routerOpts?: DOMRouterOpts;
+  keepCurrentPageLoading?: boolean;
 }
 
 export interface RoutesReturns {
@@ -71,10 +72,22 @@ const getComponent = (
   Loading: Element | undefined,
 ) => {
   return () => {
+    const initialFallback = m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined;
+    const fallback = React.useRef(() => initialFallback);
+
+    const updateFallback = async (): Promise<void> => {
+      const result = await Element._result;
+      if (result)
+        fallback.current = typeof result === 'function' ? result : (result as any).default;
+    };
+
+    React.useEffect(() => {
+      updateFallback();
+    }, [Element]);
     if (m && m.Loader) {
       const { data } = useLoaderData() as any;
       return (
-        <Suspense fallback={m.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined}>
+        <Suspense fallback={<fallback.current />}>
           <Await resolve={data}>
             <Element />
           </Await>
@@ -82,7 +95,7 @@ const getComponent = (
       );
     }
     return (
-      <Suspense fallback={m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined}>
+      <Suspense fallback={<fallback.current />}>
         <Element />
       </Suspense>
     );
@@ -137,7 +150,7 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
       ...index,
       lazy: async () => {
         const m = await module();
-        const Element = m.default || Fragment;
+        const Element = m?.default || Fragment;
         return {
           Component: getComponent(m, Element, Loading),
           ErrorBoundary: m?.Catch,

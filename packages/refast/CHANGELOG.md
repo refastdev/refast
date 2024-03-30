@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.26
+
+### Patch Changes
+
+- fix router loading
+
 ## 0.0.25
 
 ### Patch Changes
