@@ -4,4 +4,16 @@ import { routes } from '@refastdev/refast/routes';
 import { createRoot } from 'react-dom/client';
 
 const root = document.getElementById('root') as HTMLElement;
-createRoot(root).render(<Refast routes={routes} i18n={i18n} />);
+createRoot(root).render(
+  <Refast
+    routes={{
+      auth: {
+        getToken: () => false,
+        setToken: (token: any) => {},
+        notAuthPath: '/login',
+      },
+      ...routes,
+    }}
+    i18n={i18n}
+  />,
+);

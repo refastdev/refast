@@ -12,6 +12,9 @@ import {
 } from 'react-router-dom';
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
+import { ProtectedRoute } from './components/ProtectedRoute';
+import AuthProvider, { useAuth } from './provider/AuthProvider';
+
 type Element = () => React.JSX.Element;
 
 type Module = {
@@ -20,6 +23,7 @@ type Module = {
   Action?: ActionFunction;
   Loading?: Element;
   Catch?: Element;
+  IsAuth?: (token: any) => boolean;
   errorElement?: React.ReactNode | null;
 };
 
@@ -29,6 +33,12 @@ export type PagePreservedModule = Module;
 export type PageRoutesModule = Module;
 
 export type DOMRouterOpts = Parameters<typeof createBrowserRouter>[1];
+
+export interface AuthOption {
+  getToken: () => any;
+  setToken: (token: any) => void;
+  notAuthPath: string;
+}
 
 export interface RoutesOption {
   page_AppName?: string;
@@ -40,6 +50,7 @@ export interface RoutesOption {
   routerType?: 'hash' | 'history';
   routerOpts?: DOMRouterOpts;
   keepCurrentPageLoading?: boolean;
+  auth?: AuthOption;
 }
 
 export interface RoutesReturns {
@@ -62,23 +73,28 @@ const getComponent = (
   m: Partial<Module> | undefined,
   Element: Element | any,
   Loading: Element | undefined,
+  auth?: AuthOption,
 ) => {
   return () => {
     const fallback = m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined;
     if (m && m.Loader) {
       const { data } = useLoaderData() as any;
       return (
-        <Suspense fallback={fallback}>
-          <Await resolve={data}>
-            <Element />
-          </Await>
-        </Suspense>
+        <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
+          <Suspense fallback={fallback}>
+            <Await resolve={data}>
+              <Element />
+            </Await>
+          </Suspense>
+        </ProtectedRoute>
       );
     }
     return (
-      <Suspense fallback={fallback}>
-        <Element />
-      </Suspense>
+      <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
+        <Suspense fallback={fallback}>
+          <Element />
+        </Suspense>
+      </ProtectedRoute>
     );
   };
 };
@@ -113,12 +129,8 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
   const _loading: (() => Promise<Omit<PagePreservedModule, 'Action'>>) | undefined = (
     preservedRoutes as any
   )?.[pageLoadingName];
-  let pageLoading: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
-  if (_loading) {
-    pageLoading = await _loading();
-  }
-  const Loading = pageLoading?.default;
 
+  const Loading = _loading && (await _loading())?.default;
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index: { index: boolean } =
       /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`)
@@ -130,7 +142,7 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
         const m = await module();
         const Element = m?.default || Fragment;
         return {
-          Component: getComponent(m, Element, Loading),
+          Component: getComponent(m, Element, Loading, options.auth),
           ErrorBoundary: m?.Catch,
           loader: getLoader(m),
           action: m?.Action,
@@ -153,7 +165,7 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     const AppElement = pageApp?.default || (Outlet as Element);
     const App = () => <AppElement />;
     return {
-      Component: getComponent(pageApp, App, Loading),
+      Component: getComponent(pageApp, App, Loading, options.auth),
       ErrorBoundary: pageApp?.Catch,
       loader: getLoader(pageApp),
     };
@@ -168,13 +180,12 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
     routerType === 'history'
       ? createBrowserRouter(routes, routerOpts)
       : createHashRouter(routes, routerOpts);
+
   const Routes = () => {
     return (
-      <RouterProvider
-        router={router}
-        fallbackElement={Loading && <Loading />}
-        future={{ v7_startTransition: true }}
-      />
+      <AuthProvider getToken={options.auth?.getToken} setToken={options.auth?.setToken}>
+        <RouterProvider router={router} fallbackElement={Loading && <Loading />} />
+      </AuthProvider>
     );
   };
   return {

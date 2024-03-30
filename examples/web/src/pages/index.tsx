@@ -9,6 +9,9 @@ export default function Index() {
           <Link to="/test">Jump Test Page</Link>
         </div>
         <div>
+          <Link to="/test_auth">Jump Test Auth Page</Link>
+        </div>
+        <div>
           <Link to="/sub">Jump Sub Page</Link>
         </div>
       </div>
