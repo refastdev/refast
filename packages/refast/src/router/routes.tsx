@@ -1,5 +1,5 @@
 import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
-import React, { Suspense } from 'react';
+import React, { LazyExoticComponent, Suspense, lazy } from 'react';
 import { Fragment, useEffect, useState } from 'react';
 import {
   Await,
@@ -21,7 +21,6 @@ type Module = {
   default: Element;
   Loader?: LoaderFunction;
   Action?: ActionFunction;
-  Loading?: Element;
   Catch?: Element;
   IsAuth?: (token: any) => boolean;
   errorElement?: React.ReactNode | null;
@@ -58,44 +57,123 @@ export interface RoutesReturns {
   Routes: Element;
 }
 
-const getLoader = (m: Partial<Module> | undefined) => {
-  return (args: any) => {
-    if (m && m.Loader) {
-      return defer({
-        data: m.Loader(args),
-      });
+const getLoader = (module: ModuleRouter | undefined) => {
+  return async (args: any) => {
+    if (module) {
+      const m = await module();
+      if (m && m.Loader) {
+        return defer({
+          data: m.Loader(args),
+        });
+      }
     }
     return null;
   };
 };
 
+const getAction = (module: ModuleRouter | undefined) => {
+  return async (args: any) => {
+    if (module) {
+      const m = await module();
+      if (m && m.Action) {
+        return await m.Action(args);
+      }
+    }
+    return null;
+  };
+};
+
+const getErrorBoundary = (module: ModuleRouter | undefined) => {
+  if (module) {
+    return () => {
+      const ErrorBoundary = lazy(async () => ({
+        default: (await module()).Catch || Fragment,
+      }));
+      return (
+        <Suspense>
+          <ErrorBoundary />
+        </Suspense>
+      );
+    };
+  }
+};
+
 const getComponent = (
-  m: Partial<Module> | undefined,
-  Element: Element | any,
-  Loading: Element | undefined,
+  module: ModuleRouter | undefined,
+  GlobalLoading: Element | undefined,
   auth?: AuthOption,
 ) => {
-  return () => {
-    const fallback = m?.Loading ? <m.Loading /> : Loading ? <Loading /> : undefined;
-    if (m && m.Loader) {
-      const { data } = useLoaderData() as any;
-      return (
-        <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
-          <Suspense fallback={fallback}>
-            <Await resolve={data}>
-              <Element />
-            </Await>
-          </Suspense>
-        </ProtectedRoute>
+  return (props: any) => {
+    if (module) {
+      const [ComponentContainer, setComponentContainer] = useState<LazyExoticComponent<any> | null>(
+        null,
       );
-    }
-    return (
-      <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
+      const fallback = GlobalLoading ? <GlobalLoading /> : undefined;
+      useEffect(() => {
+        setComponentContainer(
+          lazy(async () => {
+            const m = await module();
+            let Component: React.ComponentType<any> | undefined = undefined;
+            if (m && m.Loader) {
+              Component = (props) => {
+                const { data } = useLoaderData() as any;
+                const Element = m.default || Fragment;
+                return (
+                  <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+                    <Suspense fallback={fallback}>
+                      <Await resolve={data}>
+                        <Element {...props} />
+                      </Await>
+                    </Suspense>
+                  </ProtectedRoute>
+                );
+              };
+            } else {
+              Component = (props) => {
+                const Element = m.default || Fragment;
+                return (
+                  <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+                    <Suspense fallback={fallback}>
+                      <Element {...props} />
+                    </Suspense>
+                  </ProtectedRoute>
+                );
+              };
+            }
+            return {
+              default: Component || Fragment,
+            };
+          }),
+        );
+      }, []);
+
+      return (
         <Suspense fallback={fallback}>
-          <Element />
+          {ComponentContainer && <ComponentContainer {...props} />}
         </Suspense>
-      </ProtectedRoute>
-    );
+      );
+
+      // if (m && m.Loader) {
+      //   const { data } = useLoaderData() as any;
+      //   return (
+      //     <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
+      //       <Suspense fallback={fallback}>
+      //         <Await resolve={data}>
+      //           <Element />
+      //         </Await>
+      //       </Suspense>
+      //     </ProtectedRoute>
+      //   );
+      // }
+      // return (
+      //   <ProtectedRoute isAuth={m?.IsAuth} notAuthPath={auth?.notAuthPath}>
+      //     <Suspense fallback={fallback}>
+      //       <Element />
+      //     </Suspense>
+      //   </ProtectedRoute>
+      // );
+    }
+    return undefined;
   };
 };
 
@@ -132,47 +210,32 @@ const getRoutes = async (options: RoutesOption): Promise<RoutesReturns> => {
 
   const Loading = _loading && (await _loading())?.default;
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
-    const index: { index: boolean } =
-      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`)
-        ? { index: true }
-        : { index: false };
+    const index =
+      /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`) ? true : false;
     return {
-      ...index,
-      lazy: async () => {
-        const m = await module();
-        const Element = m?.default || Fragment;
-        return {
-          Component: getComponent(m, Element, Loading, options.auth),
-          ErrorBoundary: m?.Catch,
-          loader: getLoader(m),
-          action: m?.Action,
-        };
-      },
+      index,
+      Component: getComponent(module, Loading, options.auth),
+      ErrorBoundary: getErrorBoundary(module),
+      loader: getLoader(module),
+      action: getAction(module),
     };
   });
 
-  let pageApp: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
   let page404: Omit<PagePreservedModule, 'Action'> | undefined = undefined;
-
   if (_404) {
     page404 = await _404();
   }
 
-  const app = async () => {
-    if (_app) {
-      pageApp = await _app();
-    }
-    const AppElement = pageApp?.default || (Outlet as Element);
-    const App = () => <AppElement />;
-    return {
-      Component: getComponent(pageApp, App, Loading, options.auth),
-      ErrorBoundary: pageApp?.Catch,
-      loader: getLoader(pageApp),
-    };
+  const App: RouteObject = {
+    loader: getLoader(_app),
+    Component: getComponent(_app, Loading, options.auth),
+    ErrorBoundary: getErrorBoundary(_app),
+    action: getAction(_app),
   };
+
   const fallback = { path: '*', Component: page404?.default || Fragment };
 
-  const routes: RouteObject[] = [{ lazy: app, children: [...regularRoutes, fallback] }];
+  const routes: RouteObject[] = [{ ...App, children: [...regularRoutes, fallback] }];
   const routerOpts: DOMRouterOpts = {
     ...pageOption.routerOpts,
   };
