@@ -3,7 +3,7 @@ import { Link, useLoader } from '@refastdev/refast';
 export const Loader = async () => {
   await new Promise((r) => setTimeout(r, 1000));
   return {
-    data: 'test',
+    ddd: 'test',
   };
 };
 

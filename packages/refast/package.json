@@ -110,6 +110,7 @@
     "nextjs"
   ],
   "dependencies": {
+    "@loadable/component": "^5.16.3",
     "axios": "^1.6.7",
     "crypto-js": "^4.2.0",
     "immer": "^10.0.3",

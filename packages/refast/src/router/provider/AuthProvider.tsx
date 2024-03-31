@@ -1,38 +1,42 @@
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { ReactNode, createContext, useMemo, useState } from 'react';
+
+interface AuthData {
+  getToken?: () => any;
+  setToken?: (token: any) => void;
+  notAuthPath?: string;
+}
 
 interface AuthContextProps {
   children: ReactNode;
-  getToken?: () => any;
-  setToken?: (token: any) => void;
+  auth?: AuthData;
 }
 
 export interface AuthContextValue {
   token?: any;
   setToken: (token: any) => void;
+  notAuthPath?: string;
 }
 
 export const AuthContext = createContext<AuthContextValue>({
   setToken(token) {},
 });
 
-export const AuthProvider = ({ children, getToken, setToken }: AuthContextProps) => {
-  const [token, _setToken] = useState(getToken && getToken());
+export const AuthProvider = ({ children, auth }: AuthContextProps) => {
+  const [token, _setToken] = useState(auth?.getToken && auth.getToken());
 
   // Function to set the authentication token
   const __setToken = (newToken: any) => {
     _setToken(newToken);
-  };
-
-  useEffect(() => {
-    if (setToken) {
-      setToken(token);
+    if (auth?.setToken) {
+      auth.setToken(token);
     }
-  }, [token]);
+  };
 
   // Memoized value of the authentication context
   const contextValue = useMemo(
     () => ({
       token,
+      notAuthPath: auth?.notAuthPath,
       setToken: __setToken,
     }),
     [token],

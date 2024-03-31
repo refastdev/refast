@@ -1,6 +1,8 @@
 import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
-import React, { useEffect, useMemo } from 'react';
-import { Fragment, Suspense, lazy } from 'react';
+//@ts-ignore
+import loadable from '@loadable/component';
+import React from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import {
   Await,
   RouterProvider,
@@ -70,11 +72,14 @@ export interface RoutesReturns {
 const getLoader = (
   module: ModuleRouter | undefined,
   loadingOpt?: RoutesLoadingOption,
-  loading?: TricklingInstance,
+  defaultLoading?: TricklingInstance,
 ) => {
   return async (args: any) => {
     if (module) {
-      loading?.start();
+      if (defaultLoading) {
+        defaultLoading.start();
+        defaultLoading.set(0);
+      }
       if (loadingOpt && loadingOpt.onStart) {
         loadingOpt.onStart();
       }
@@ -107,76 +112,59 @@ const getAction = (module: ModuleRouter | undefined) => {
 
 const getErrorBoundary = (module: ModuleRouter | undefined) => {
   if (module) {
+    const ErrorBoundary = loadable(async () => ({ default: (await module()).Catch || Fragment }));
     return () => {
-      const ErrorBoundary = lazy(async () => ({
-        default: (await module()).Catch || Fragment,
-      }));
-      return (
-        <Suspense>
-          <ErrorBoundary />
-        </Suspense>
-      );
+      return <ErrorBoundary />;
     };
   }
 };
 
 const getComponent = (
   module: ModuleRouter | undefined,
-  auth?: RoutesAuthOption,
   loadingOpt?: RoutesLoadingOption,
-  loading?: TricklingInstance,
+  defaultLoading?: TricklingInstance,
 ) => {
   const keepCurrentPage = !loadingOpt?.notKeepCurrentPage;
   const fallback = !keepCurrentPage && loadingOpt?.Loading ? <loadingOpt.Loading /> : undefined;
   if (module) {
-    const ComponentContainer = lazy(async () => {
-      const m = await module();
-      let Component: React.ComponentType<any> | undefined = undefined;
-      if (m && m.Loader && !keepCurrentPage) {
-        Component = (props) => {
-          const { data } = useLoaderData() as any;
-          const Element = m.default || Fragment;
-          const renderFunc = (data: any) => {
-            useEffect(() => {
-              loading?.done();
-              if (loadingOpt?.onStop) {
-                loadingOpt.onStop();
-              }
-            }, []);
-            return <Element {...props} />;
-          };
+    let m: Partial<Module> | undefined = undefined;
+    const Component = {
+      default: (props: any) => {
+        const Element = m?.default || Fragment;
+        useEffect(() => {
+          defaultLoading?.done();
+          if (loadingOpt?.onStop) {
+            loadingOpt.onStop();
+          }
+        }, []);
+        if (m?.Loader && !keepCurrentPage) {
+          const data = useLoaderData() as any;
           return (
-            <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-              <Await resolve={data}>{renderFunc}</Await>
+            <ProtectedRoute isAuth={m?.IsAuth}>
+              <Await resolve={data.data}>
+                <Element {...props} />
+              </Await>
             </ProtectedRoute>
           );
-        };
-      } else if (m) {
-        Component = (props) => {
-          useEffect(() => {
-            loading?.done();
-            if (loadingOpt?.onStop) {
-              loadingOpt.onStop();
-            }
-          }, []);
-          const Element = m.default || Fragment;
-          return (
-            <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-              <Element {...props} />
-            </ProtectedRoute>
-          );
-        };
-      }
-      return {
-        default: Component || Fragment,
-      };
-    });
+        }
+        return (
+          <ProtectedRoute isAuth={m?.IsAuth}>
+            <Element {...props} />
+          </ProtectedRoute>
+        );
+      },
+    };
+    const LazyComponent = loadable(
+      async () => {
+        m = await module();
+        return Component;
+      },
+      {
+        fallback,
+      },
+    );
     return (props: any) => {
-      return (
-        <Suspense fallback={fallback}>
-          <ComponentContainer {...props} />
-        </Suspense>
-      );
+      return <LazyComponent {...props} />;
     };
   }
   return undefined;
@@ -220,7 +208,7 @@ export const useRoutes = (options: RoutesOption) => {
 
     return {
       index,
-      Component: getComponent(module, options.auth, options.loading, loading),
+      Component: getComponent(module, options.loading, loading),
       ErrorBoundary: getErrorBoundary(module),
       loader: getLoader(module, options.loading, loading),
       action: getAction(module),
@@ -229,14 +217,14 @@ export const useRoutes = (options: RoutesOption) => {
 
   const App: RouteObject = {
     loader: getLoader(_app, options.loading, loading),
-    Component: getComponent(_app, options.auth, options.loading, loading),
+    Component: getComponent(_app, options.loading, loading),
     ErrorBoundary: getErrorBoundary(_app),
     action: getAction(_app),
   };
 
   const fallback: RouteObject = {
     path: '*',
-    Component: getComponent(_404, options.auth, options.loading, loading),
+    Component: getComponent(_404, options.loading, loading),
   };
 
   const routes: RouteObject[] = [{ ...App, children: [...regularRoutes, fallback] }];
@@ -254,7 +242,7 @@ export const useRoutes = (options: RoutesOption) => {
   const Routes = useMemo(() => {
     return (
       <>
-        <AuthProvider getToken={options.auth?.getToken} setToken={options.auth?.setToken}>
+        <AuthProvider auth={options.auth}>
           <RouterProvider
             fallbackElement={!keepCurrentPage ? loadingFallback : undefined}
             router={router}
