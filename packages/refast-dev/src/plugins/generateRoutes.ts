@@ -50,9 +50,9 @@ export const routes: RoutesOption = {
 };
 `;
     const routesTypeStr = `declare const routes: {
-    pageRootPath: string;
-    pagePreservedFiles: Record<string, any>;
-    pageRoutesFiles: Record<string, any>;
+  pageRootPath: string;
+  pagePreservedFiles: Record<string, any>;
+  pageRoutesFiles: Record<string, any>;
 };
 
 export { pages };

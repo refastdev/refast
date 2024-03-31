@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.27
+
+### Patch Changes
+
+- add routes keep current page support
+
 ## 0.0.26
 
 ### Patch Changes
