@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.29
+
+### Patch Changes
+
+- fix route loading
+
 ## 0.0.28
 
 ### Patch Changes
