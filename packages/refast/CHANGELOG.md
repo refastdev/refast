@@ -1,5 +1,11 @@
 # @refastdev/refast
 
+## 0.0.28
+
+### Patch Changes
+
+- router lazy loading done
+
 ## 0.0.27
 
 ### Patch Changes
