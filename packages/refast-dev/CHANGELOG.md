@@ -1,5 +1,11 @@
 # @refastdev/refast-dev
 
+## 0.0.30
+
+### Patch Changes
+
+- remove log
+
 ## 0.0.29
 
 ### Patch Changes

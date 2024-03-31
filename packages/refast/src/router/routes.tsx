@@ -238,7 +238,6 @@ export const useRoutes = (options: RoutesOption) => {
   // };
 
   loadingStart();
-  console.log(router.state);
   router.subscribe((state) => {
     if (state && state.navigation && state.navigation.state) {
       const s = state.navigation.state;
