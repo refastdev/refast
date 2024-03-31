@@ -4,13 +4,11 @@ import { routes } from '@refastdev/refast/routes';
 import { createRoot } from 'react-dom/client';
 
 import { auth } from './auth';
-import loading from './loading';
 
 const root = document.getElementById('root') as HTMLElement;
 createRoot(root).render(
   <Refast
     routes={{
-      loading,
       auth,
       ...routes,
     }}

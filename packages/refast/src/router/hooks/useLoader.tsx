@@ -3,11 +3,14 @@ import { useAsyncValue, useLoaderData } from 'react-router-dom';
 export function useLoader<T>(): T | undefined {
   const data = useLoaderData();
   if (data) {
-    return (data as any).data;
+    if (typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, '__deferDataFlag')) {
+      const originData = (data as any).data;
+      if (originData instanceof Promise) {
+        return useAsyncValue() as T;
+      }
+      return originData;
+    }
+    return data as any;
   }
   return undefined;
-}
-
-export function useAsyncLoader<T>(): T | undefined {
-  return useAsyncValue() as T;
 }

@@ -235,6 +235,9 @@ importers:
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
+      trickling:
+        specifier: ^1.14.0
+        version: 1.14.0
       zustand:
         specifier: ^4.5.0
         version: 4.5.0(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
@@ -4233,6 +4236,10 @@ packages:
       mime-types: 2.1.35
     dev: false
 
+  /fourdom@1.3.0:
+    resolution: {integrity: sha512-XUYNdQDrv87Kr64xfOG1MuHvk7ZVuE7unCtipZJLFmwh4zFhaT2oDpXA/Vt8fyKMXdE/9A+v6nsMqVr6ilIJog==}
+    dev: false
+
   /fs-extra@10.1.0:
     resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
     engines: {node: '>=12'}
@@ -6390,6 +6397,12 @@ packages:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
     dev: true
+
+  /trickling@1.14.0:
+    resolution: {integrity: sha512-Uc3uAxpQ7Q6OAfuMxa/xiCVDrfuWaQ0/sYAY5g3Hie+fuqZlfT899osj+Ls2sLikIVdWIeF14Fgjeiux5xsFDQ==}
+    dependencies:
+      fourdom: 1.3.0
+    dev: false
 
   /trim-newlines@3.0.1:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}

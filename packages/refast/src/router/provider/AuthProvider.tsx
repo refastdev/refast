@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextValue>({
   setToken(token) {},
 });
 
-const AuthProvider = ({ children, getToken, setToken }: AuthContextProps) => {
+export const AuthProvider = ({ children, getToken, setToken }: AuthContextProps) => {
   const [token, _setToken] = useState(getToken && getToken());
 
   // Function to set the authentication token
@@ -41,5 +41,3 @@ const AuthProvider = ({ children, getToken, setToken }: AuthContextProps) => {
   // Provide the authentication context to the children components
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
-
-export default AuthProvider;

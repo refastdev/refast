@@ -1,4 +1,4 @@
-import { Outlet, SelectorLocale, Trans, useText } from '@refastdev/refast';
+import { Outlet, SelectorLocale, Trans, useLoader, useText } from '@refastdev/refast';
 import { create } from '@refastdev/refast/state';
 
 interface StoreType {
@@ -18,11 +18,13 @@ const { useStore } = create<StoreType>((set, setState) => ({
 export const Loader = async () => {
   await new Promise((r) => setTimeout(r, 1000));
   return {
-    data: 'app',
+    dd: 'ddd',
   };
 };
 
 export default function App() {
+  const data = useLoader();
+  console.log(data);
   const { i18n } = useText();
   const state = useStore((state) => state);
 

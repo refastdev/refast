@@ -1,5 +1,5 @@
 import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/react-router/core';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Fragment, Suspense, lazy } from 'react';
 import {
   Await,
@@ -12,7 +12,8 @@ import {
 import type { ActionFunction, LoaderFunction, RouteObject } from 'react-router-dom';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
-import AuthProvider from './provider/AuthProvider';
+import { AuthProvider } from './provider';
+import { TricklingInstance, TricklingOptions, createLoading } from './utils/loading';
 
 type Element = () => React.JSX.Element;
 
@@ -22,7 +23,6 @@ type Module = {
   Action?: ActionFunction;
   Catch?: Element;
   IsAuth?: (token: any) => boolean;
-  errorElement?: React.ReactNode | null;
 };
 
 type ModuleRouter = () => Promise<Partial<Module>>;
@@ -32,10 +32,19 @@ export type PageRoutesModule = Module;
 
 export type DOMRouterOpts = Parameters<typeof createBrowserRouter>[1];
 
-export interface AuthOption {
+export interface RoutesAuthOption {
   getToken: () => any;
   setToken: (token: any) => void;
   notAuthPath: string;
+}
+
+export interface RoutesLoadingOption {
+  notKeepCurrentPage?: boolean;
+  Loading?: Element;
+  onStart?: () => void;
+  onStop?: () => void;
+  defaultLoadingDisable?: boolean;
+  defaultLoadingOptions?: TricklingOptions;
 }
 
 export interface RoutesOption {
@@ -49,10 +58,8 @@ export interface RoutesOption {
   routerType?: 'hash' | 'history';
   routerOpts?: DOMRouterOpts;
 
-  keepCurrentPageLoading?: boolean;
-  auth?: AuthOption;
-
-  loading?: Element;
+  auth?: RoutesAuthOption;
+  loading?: RoutesLoadingOption;
 }
 
 export interface RoutesReturns {
@@ -60,13 +67,25 @@ export interface RoutesReturns {
   Routes: Element;
 }
 
-const getLoader = (module: ModuleRouter | undefined) => {
+const getLoader = (
+  module: ModuleRouter | undefined,
+  loadingOpt?: RoutesLoadingOption,
+  loading?: TricklingInstance,
+) => {
   return async (args: any) => {
     if (module) {
+      loading?.start();
+      if (loadingOpt && loadingOpt.onStart) {
+        loadingOpt.onStart();
+      }
       const m = await module();
       if (m && m.Loader) {
+        if (!loadingOpt?.notKeepCurrentPage) {
+          return await m.Loader(args);
+        }
         return defer({
           data: m.Loader(args),
+          __deferDataFlag: true,
         });
       }
     }
@@ -86,7 +105,7 @@ const getAction = (module: ModuleRouter | undefined) => {
   };
 };
 
-const useErrorBoundary = (module: ModuleRouter | undefined) => {
+const getErrorBoundary = (module: ModuleRouter | undefined) => {
   if (module) {
     return () => {
       const ErrorBoundary = lazy(async () => ({
@@ -101,69 +120,88 @@ const useErrorBoundary = (module: ModuleRouter | undefined) => {
   }
 };
 
-const useComponent = (
+const getComponent = (
   module: ModuleRouter | undefined,
-  GlobalLoading: Element | undefined,
-  auth?: AuthOption,
+  auth?: RoutesAuthOption,
+  loadingOpt?: RoutesLoadingOption,
+  loading?: TricklingInstance,
 ) => {
-  const LazyComponent = (props: any) => {
-    if (module) {
-      const fallback = GlobalLoading ? <GlobalLoading /> : undefined;
-      const ComponentContainer = lazy(async () => {
-        const m = await module();
-        let Component: React.ComponentType<any> | undefined = undefined;
-        if (m && m.Loader) {
-          Component = (props) => {
-            const { data } = useLoaderData() as any;
-            const Element = m.default || Fragment;
-            return (
-              <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-                <Await resolve={data}>
-                  <Element {...props} />
-                </Await>
-              </ProtectedRoute>
-            );
+  const keepCurrentPage = !loadingOpt?.notKeepCurrentPage;
+  const fallback = !keepCurrentPage && loadingOpt?.Loading ? <loadingOpt.Loading /> : undefined;
+  if (module) {
+    const ComponentContainer = lazy(async () => {
+      const m = await module();
+      let Component: React.ComponentType<any> | undefined = undefined;
+      if (m && m.Loader && !keepCurrentPage) {
+        Component = (props) => {
+          const { data } = useLoaderData() as any;
+          const Element = m.default || Fragment;
+          const renderFunc = (data: any) => {
+            useEffect(() => {
+              loading?.done();
+              if (loadingOpt?.onStop) {
+                loadingOpt.onStop();
+              }
+            }, []);
+            return <Element {...props} />;
           };
-        } else {
-          Component = (props) => {
-            const Element = m.default || Fragment;
-            return (
-              <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
-                <Element {...props} />
-              </ProtectedRoute>
-            );
-          };
-        }
-        return {
-          default: Component || Fragment,
+          return (
+            <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+              <Await resolve={data}>{renderFunc}</Await>
+            </ProtectedRoute>
+          );
         };
-      });
+      } else if (m) {
+        Component = (props) => {
+          useEffect(() => {
+            loading?.done();
+            if (loadingOpt?.onStop) {
+              loadingOpt.onStop();
+            }
+          }, []);
+          const Element = m.default || Fragment;
+          return (
+            <ProtectedRoute isAuth={m.IsAuth} notAuthPath={auth?.notAuthPath}>
+              <Element {...props} />
+            </ProtectedRoute>
+          );
+        };
+      }
+      return {
+        default: Component || Fragment,
+      };
+    });
+    return (props: any) => {
       return (
         <Suspense fallback={fallback}>
-          {ComponentContainer && <ComponentContainer {...props} />}
+          <ComponentContainer {...props} />
         </Suspense>
       );
-    }
-    return undefined;
-  };
-  return LazyComponent;
+    };
+  }
+  return undefined;
 };
 
 export const useRoutes = (options: RoutesOption) => {
-  const pageOption = options || {};
+  options = options || {};
+
+  const loading: TricklingInstance | undefined =
+    options.loading === undefined || !options.loading.defaultLoadingDisable
+      ? createLoading(options.loading?.defaultLoadingOptions)
+      : undefined;
 
   let PRESERVED: Record<string, any>;
   let ROUTES: Record<string, any>;
   let pageRootPath: string;
-  const pageAppName = pageOption.pageName_App || '_app';
-  const page404Name = pageOption.pageName_404 || '_404';
+  const pageAppName = options.pageName_App || '_app';
+  const page404Name = options.pageName_404 || '_404';
   let routerType = 'history';
-  if (pageOption) {
-    pageRootPath = pageOption.pageRootPath;
-    PRESERVED = pageOption.pagePreservedFiles;
-    ROUTES = pageOption.pageRoutesFiles;
-    if (pageOption.routerType) {
-      routerType = pageOption.routerType;
+  if (options) {
+    pageRootPath = options.pageRootPath;
+    PRESERVED = options.pagePreservedFiles;
+    ROUTES = options.pageRoutesFiles;
+    if (options.routerType) {
+      routerType = options.routerType;
     }
   } else {
     throw new Error('pages is undefined');
@@ -176,43 +214,55 @@ export const useRoutes = (options: RoutesOption) => {
     preservedRoutes as any
   )?.[page404Name];
 
-  const Loading = options.loading;
   const regularRoutes = generateRegularRoutes<RouteObject, ModuleRouter>(ROUTES, (module, key) => {
     const index =
       /index\.(jsx|tsx)$/.test(key) && !key.includes(`${pageRootPath}/index`) ? true : false;
+
     return {
       index,
-      Component: useComponent(module, Loading, options.auth),
-      ErrorBoundary: useErrorBoundary(module),
-      loader: getLoader(module),
+      Component: getComponent(module, options.auth, options.loading, loading),
+      ErrorBoundary: getErrorBoundary(module),
+      loader: getLoader(module, options.loading, loading),
       action: getAction(module),
     };
   });
 
   const App: RouteObject = {
-    loader: getLoader(_app),
-    Component: useComponent(_app, Loading, options.auth),
-    ErrorBoundary: useErrorBoundary(_app),
+    loader: getLoader(_app, options.loading, loading),
+    Component: getComponent(_app, options.auth, options.loading, loading),
+    ErrorBoundary: getErrorBoundary(_app),
     action: getAction(_app),
   };
 
-  const fallback: RouteObject = { path: '*', Component: useComponent(_404, Loading, options.auth) };
+  const fallback: RouteObject = {
+    path: '*',
+    Component: getComponent(_404, options.auth, options.loading, loading),
+  };
 
   const routes: RouteObject[] = [{ ...App, children: [...regularRoutes, fallback] }];
   const routerOpts: DOMRouterOpts = {
-    ...pageOption.routerOpts,
+    ...options.routerOpts,
   };
   const router =
     routerType === 'history'
       ? createBrowserRouter(routes, routerOpts)
       : createHashRouter(routes, routerOpts);
 
-  const Routes = () => {
+  const keepCurrentPage = !options.loading?.notKeepCurrentPage;
+  const loadingFallback = options.loading?.Loading ? <options.loading.Loading /> : undefined;
+
+  const Routes = useMemo(() => {
     return (
-      <AuthProvider getToken={options.auth?.getToken} setToken={options.auth?.setToken}>
-        <RouterProvider router={router} fallbackElement={Loading && <Loading />} />
-      </AuthProvider>
+      <>
+        <AuthProvider getToken={options.auth?.getToken} setToken={options.auth?.setToken}>
+          <RouterProvider
+            fallbackElement={!keepCurrentPage ? loadingFallback : undefined}
+            router={router}
+          />
+        </AuthProvider>
+        {keepCurrentPage ? loadingFallback : undefined}
+      </>
     );
-  };
+  }, []);
   return Routes;
 };

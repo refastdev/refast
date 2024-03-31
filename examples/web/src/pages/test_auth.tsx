@@ -1,4 +1,4 @@
-import { Link, useAsyncLoader } from '@refastdev/refast';
+import { Link, useLoader } from '@refastdev/refast';
 
 export const Loader = async () => {
   await new Promise((r) => setTimeout(r, 1000));
@@ -12,7 +12,7 @@ export const IsAuth = (token: any) => {
 };
 
 export default function TestAuth() {
-  const data = useAsyncLoader<{ data: string }>();
+  const data = useLoader<{ data: string }>();
   console.log(data);
   return (
     <div>
