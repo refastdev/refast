@@ -1,4 +1,4 @@
-import { Outlet, SelectorLocale, Trans, useLoader, useText } from '@refastdev/refast';
+import { Link, Outlet, SelectorLocale, Trans, useLoader, useText } from '@refastdev/refast';
 import { create } from '@refastdev/refast/state';
 
 interface StoreType {
@@ -73,6 +73,7 @@ export default function App() {
       <div>
         <div>Content:</div>
         <Outlet />
+        <Link to="/">Jump Index Page</Link>
       </div>
     </div>
   );

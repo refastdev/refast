@@ -17,9 +17,7 @@ export default function TestAuth() {
   return (
     <div>
       <div>TestAuth Page</div>
-      <div>
-        <Link to="/">Jump Index Page</Link>
-      </div>
+      <div></div>
     </div>
   );
 }

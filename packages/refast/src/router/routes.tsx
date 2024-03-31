@@ -2,7 +2,7 @@ import { generatePreservedRoutes, generateRegularRoutes } from '@generouted/reac
 //@ts-ignore
 import loadable from '@loadable/component';
 import React from 'react';
-import { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import {
   Await,
   RouterProvider,
@@ -69,20 +69,9 @@ export interface RoutesReturns {
   Routes: Element;
 }
 
-const getLoader = (
-  module: ModuleRouter | undefined,
-  loadingOpt?: RoutesLoadingOption,
-  defaultLoading?: TricklingInstance,
-) => {
+const getLoader = (module: ModuleRouter | undefined, loadingOpt?: RoutesLoadingOption) => {
   return async (args: any) => {
     if (module) {
-      if (defaultLoading) {
-        defaultLoading.start();
-        defaultLoading.set(0);
-      }
-      if (loadingOpt && loadingOpt.onStart) {
-        loadingOpt.onStart();
-      }
       const m = await module();
       if (m && m.Loader) {
         if (!loadingOpt?.notKeepCurrentPage) {
@@ -119,11 +108,7 @@ const getErrorBoundary = (module: ModuleRouter | undefined) => {
   }
 };
 
-const getComponent = (
-  module: ModuleRouter | undefined,
-  loadingOpt?: RoutesLoadingOption,
-  defaultLoading?: TricklingInstance,
-) => {
+const getComponent = (module: ModuleRouter | undefined, loadingOpt?: RoutesLoadingOption) => {
   const keepCurrentPage = !loadingOpt?.notKeepCurrentPage;
   const fallback = !keepCurrentPage && loadingOpt?.Loading ? <loadingOpt.Loading /> : undefined;
   if (module) {
@@ -131,12 +116,6 @@ const getComponent = (
     const Component = {
       default: (props: any) => {
         const Element = m?.default || Fragment;
-        useEffect(() => {
-          defaultLoading?.done();
-          if (loadingOpt?.onStop) {
-            loadingOpt.onStop();
-          }
-        }, []);
         if (m?.Loader && !keepCurrentPage) {
           const data = useLoaderData() as any;
           return (
@@ -172,12 +151,27 @@ const getComponent = (
 
 export const useRoutes = (options: RoutesOption) => {
   options = options || {};
-
   const loading: TricklingInstance | undefined =
     options.loading === undefined || !options.loading.defaultLoadingDisable
       ? createLoading(options.loading?.defaultLoadingOptions)
       : undefined;
-
+  const loadingStart = () => {
+    if (loading) {
+      loading.set(0);
+      loading.start();
+    }
+    if (options.loading?.onStart) {
+      options.loading.onStart();
+    }
+  };
+  const loadingStop = () => {
+    if (loading) {
+      loading.done();
+    }
+    if (options.loading?.onStop) {
+      options.loading.onStop();
+    }
+  };
   let PRESERVED: Record<string, any>;
   let ROUTES: Record<string, any>;
   let pageRootPath: string;
@@ -208,23 +202,23 @@ export const useRoutes = (options: RoutesOption) => {
 
     return {
       index,
-      Component: getComponent(module, options.loading, loading),
+      Component: getComponent(module, options.loading),
       ErrorBoundary: getErrorBoundary(module),
-      loader: getLoader(module, options.loading, loading),
+      loader: getLoader(module, options.loading),
       action: getAction(module),
     };
   });
 
   const App: RouteObject = {
-    loader: getLoader(_app, options.loading, loading),
-    Component: getComponent(_app, options.loading, loading),
+    loader: getLoader(_app, options.loading),
+    Component: getComponent(_app, options.loading),
     ErrorBoundary: getErrorBoundary(_app),
     action: getAction(_app),
   };
 
   const fallback: RouteObject = {
     path: '*',
-    Component: getComponent(_404, options.loading, loading),
+    Component: getComponent(_404, options.loading),
   };
 
   const routes: RouteObject[] = [{ ...App, children: [...regularRoutes, fallback] }];
@@ -235,6 +229,26 @@ export const useRoutes = (options: RoutesOption) => {
     routerType === 'history'
       ? createBrowserRouter(routes, routerOpts)
       : createHashRouter(routes, routerOpts);
+
+  // const _navigate = router.navigate.bind(router);
+  // router.navigate = async (...args) => {
+  //   const params = args as [any];
+  //   console.log(params);
+  //   return _navigate(...params);
+  // };
+
+  loadingStart();
+  console.log(router.state);
+  router.subscribe((state) => {
+    if (state && state.navigation && state.navigation.state) {
+      const s = state.navigation.state;
+      if (s === 'loading' || s === 'submitting') {
+        loadingStart();
+      } else if (s === 'idle') {
+        loadingStop();
+      }
+    }
+  });
 
   const keepCurrentPage = !options.loading?.notKeepCurrentPage;
   const loadingFallback = options.loading?.Loading ? <options.loading.Loading /> : undefined;
