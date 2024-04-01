@@ -4,7 +4,7 @@ import { useAuth } from '../hooks';
 import { Navigate } from './Navigate';
 
 interface ProtectedRouteProps {
-  children?: ReactNode;
+  children: ReactNode;
   isAuth?: (token: any) => boolean;
 }
 
@@ -13,5 +13,5 @@ export const ProtectedRoute = ({ children, isAuth }: ProtectedRouteProps) => {
   if (isAuth && notAuthPath && !isAuth(token)) {
     return <Navigate to={notAuthPath} />;
   }
-  return children;
+  return <>{children}</>;
 };
